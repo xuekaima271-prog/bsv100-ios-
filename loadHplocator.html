@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-button-div {
+				height: 40px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 15px;
+			}
+
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">高精度定位配置</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadHplocator_gps_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">GPS参数</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>对应串口名</label>
+							<input type="text" id="loadHplocator_gps_device" name="device" />
+						</div>
+						<div class="mui-input-row">
+							<label>定位类型</label>
+							<select name="dgps" id="loadHplocator_gps_dgps">
+								<option value="A">自主定位</option>
+								<option value="D">差分定位</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>设备型号</label>
+							<select name="device_type" id="loadHplocator_gps_device_type" onchange="updateBaudrate()">
+								<option value="BSL100-H">BSL100-H</option>
+								<option value="BSL100-M">BSL100-M</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>波特率</label>
+							<input type="text" id="loadHplocator_gps_baudrate" name="baudrate" />
+						</div>
+						<div class="mui-input-row">
+							<label>强制初始化</label>
+							<div class="mui-switch" id="loadHplocator_gps_force_init" name="force_init">
+								<input type="hidden" id="loadHplocator_gps_force_init_in" name="force_init">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label>开启10Hz</label>
+							<div class="mui-switch" id="loadHplocator_gps_surport_10hz" name="surport_10hz">
+								<input type="hidden" id="loadHplocator_gps_surport_10hz_in" name="surport_10hz">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<form class="mui-input-group" id="loadHplocator_report_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">上报参数</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width: 60%;">静止正常上报时间</label>
+							<input style="width: 40%;" type="number" name="staticReportTime" id="loadHplocator_report_staticReportTime" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 60%;">静止上报时间间隔</label>
+							<input style="width: 40%;"type="number" name="staticInterval" id="loadHplocator_report_staticInterval" />
+						</div>
+						<div class="mui-input-row">
+							<label>开启批量上传</label>
+						  <div class="mui-switch" id="loadHplocator_report_batch_report" name="batch_report">
+						  	<input type="hidden" id="loadHplocator_report_batch_report_in" name="batch_report">
+						  	<div class="mui-switch-handle"></div>
+						  </div>
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 60%;">位置上报间隔(ms)</label>
+							<input style="width: 40%;" type="number" name="externSendInterval" id="loadHplocator_report_externSendInterval" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<form class="mui-input-group" id="loadHplocator_rtk_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">差分服务器</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>服务器地址</label>
+							<input type="text" id="loadHplocator_rtk_serverIp" name="serverIp" />
+						</div>
+						<div class="mui-input-row">
+							<label>端口</label>
+							<input type="text" id="loadHplocator_rtk_serverPort" name="serverPort" />
+						</div>
+						<div class="mui-input-row">
+							<label>挂载点</label>
+							<input type="text" id="loadHplocator_rtk_mountpoint" name="mountpoint" />
+						</div>
+						<div class="mui-input-row">
+							<label>用户名</label>
+							<input type="text" id="loadHplocator_rtk_user" name="user" />
+						</div>
+						<div class="mui-input-row">
+							<label>密码</label>
+							<input type="password" class="mui-input-password" id="loadHplocator_rtk_password"
+								name="password" />
+						</div>
+					</li>
+				</ul>
+			</form>
+			<div class="mui-button-row mui-button-div">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row mui-button-bottom">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn"
+					style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function() {
+
+				//请求数据的URL地址
+				var baseConfigIp = configIp;
+
+				//请求数据的端口号
+				var baseConfigPort = configPort;
+				
+				// hplocator的全部配置，加载配置时赋值
+				var hplocatorAllConfig = {};
+
+				//发送请求获取高精度定位的基础配置
+				$.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadHplocator.cgi',
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						let configData = data.config;
+						hplocatorAllConfig = configData;
+						console.log("hplocator-configData-load:" + JSON.stringify(configData));
+						for (let baseIndex in configData) {
+							// 差分服务器数据回显
+							if (baseIndex == "rtk") {
+								// 差分定位器
+								let rtkData = configData[baseIndex];
+								for (let rtkIndex in rtkData) {
+									if ($('#loadHplocator_rtk_' + rtkIndex).length > 0) {
+										document.getElementById("loadHplocator_rtk_" + rtkIndex).value =
+											rtkData[rtkIndex];
+									}
+								}
+							}
+							// gps参数回显
+							else if (baseIndex == "gps") {
+								// gps
+								let gpsData = configData[baseIndex];
+								for (let gpsIndex in gpsData) {
+									if ($('#loadHplocator_gps_' + gpsIndex).length > 0) {
+										document.getElementById("loadHplocator_gps_" + gpsIndex).value =
+											gpsData[gpsIndex];
+									}
+								}
+								// 赋值强制初始化
+								if (gpsData.force_init == "true" || gpsData.force_init == true) {
+									mui("#loadHplocator_gps_force_init").switch().toggle();
+									$('#loadHplocator_gps_force_init_in').val(true);
+								} else {
+									$('#loadHplocator_gps_force_init_in').val(false);
+								}
+								// 赋值是否开启10Hz
+								if (gpsData.surport_10hz == "true" || gpsData.surport_10hz == true) {
+									mui("#loadHplocator_gps_surport_10hz").switch().toggle();
+									$('#loadHplocator_gps_surport_10hz_in').val(true);
+								} else {
+									$('#loadHplocator_gps_surport_10hz_in').val(false);
+								}
+							}
+							// 位置上报参数回显
+							else if (baseIndex == "report") {
+								let reportData = configData[baseIndex];
+								for (let reportIndex in reportData) {
+									if ($('#loadHplocator_report_' + reportIndex).length > 0) {
+										document.getElementById("loadHplocator_report_" + reportIndex).value =
+											reportData[reportIndex];
+									}
+								}
+								// 赋值是否开启批量上传
+								if (reportData.batch_report == "true" || reportData.batch_report == true) {
+									mui("#loadHplocator_report_batch_report").switch().toggle();
+									$('#loadHplocator_report_batch_report_in').val(true);
+								} else {
+									$('#loadHplocator_report_batch_report_in').val(false);
+								}
+							}
+						}
+					}
+				});
+				
+				// 点击强制初始化重新赋值
+				document.getElementById('loadHplocator_gps_force_init').addEventListener('tap', function() {
+					let stateVal = $('#loadHplocator_gps_force_init_in').val();
+					
+					if (stateVal == "true" || stateVal == true) {
+						$('#loadHplocator_gps_force_init_in').val(false);
+					} else {
+						$('#loadHplocator_gps_force_init_in').val(true);
+					}
+				});
+				
+				// 点击开启10Hz重新赋值
+				document.getElementById('loadHplocator_gps_surport_10hz').addEventListener('tap', function() {
+					let stateVal = $('#loadHplocator_gps_surport_10hz_in').val();
+					
+					if (stateVal == "true" || stateVal == true) {
+						$('#loadHplocator_gps_surport_10hz_in').val(false);
+					} else {
+						$('#loadHplocator_gps_surport_10hz_in').val(true);
+					}
+				});
+				
+				// 点击批量上传重新赋值
+				document.getElementById('loadHplocator_report_batch_report').addEventListener('tap', function() {
+					let stateVal = $('#loadHplocator_report_batch_report_in').val();
+					
+					if (stateVal == "true" || stateVal == true) {
+						$('#loadHplocator_report_batch_report_in').val(false);
+					} else {
+						$('#loadHplocator_report_batch_report_in').val(true);
+					}
+				});
+
+				//点击保存按钮，向服务器发送请求，储存信息
+				document.getElementById('saveBtn').addEventListener('tap', function() {
+					var btnArray = ['否', '是'];
+					mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+						if (e.index == 1) {
+							//获取表单数据
+							var loadHplocator_gps = $('#loadHplocator_gps_form').serializeObject();
+							var loadHplocator_rtk = $('#loadHplocator_rtk_form').serializeObject();
+							var loadHplocator_report = $('#loadHplocator_report_form').serializeObject();
+							//服务器接收整型的数据，将字符串转化为整型
+							loadHplocator_gps.baudrate = Number(loadHplocator_gps.baudrate);
+							loadHplocator_rtk.serverPort = Number(loadHplocator_rtk.serverPort);
+							loadHplocator_report.externSendInterval = Number(loadHplocator_report.externSendInterval);
+							loadHplocator_report.staticInterval = Number(loadHplocator_report.staticInterval);
+							loadHplocator_report.staticReportTime = Number(loadHplocator_report.staticReportTime);
+							// 重新赋值布尔类型的参数
+							if(loadHplocator_gps.force_init == "true"){
+								loadHplocator_gps.force_init = true
+							}else{
+								loadHplocator_gps.force_init = false
+							}
+							if(loadHplocator_gps.surport_10hz == "true"){
+								loadHplocator_gps.surport_10hz = true
+							}else{
+								loadHplocator_gps.surport_10hz= false
+							}
+							if(loadHplocator_report.batch_report == "true"){
+								loadHplocator_report.batch_report = true
+							}else{
+								loadHplocator_report.batch_report= false
+							}
+							
+							// 组装成服务器需要的数据格式
+							var allData = hplocatorAllConfig;
+							// 使用对象展开运算符将表单中的gps信息赋值给完整的保存对象
+							for (let key in loadHplocator_gps) {
+							    if (loadHplocator_gps.hasOwnProperty(key)) {
+							        allData.gps[key] = loadHplocator_gps[key];
+							    }
+							}
+							
+							// 使用对象展开运算符将表单中的rtk信息赋值给完整的保存对象
+							for (let key in loadHplocator_rtk) {
+							    if (loadHplocator_rtk.hasOwnProperty(key)) {
+							        allData.rtk[key] = loadHplocator_rtk[key];
+							    }
+							}
+							
+							// 使用对象展开运算符将表单中的report信息赋值给完整的保存对象
+							for (let key in loadHplocator_report) {
+							    if (loadHplocator_report.hasOwnProperty(key)) {
+							        allData.report[key] = loadHplocator_report[key];
+							    }
+							}
+							
+							var config = {
+								config: JSON.stringify(allData)
+							}
+							var formdata = new FormData();
+							for (let index in config) {
+								formdata.append(index, config[index])
+							}
+							
+							// 打印配置信息 - 调试时可以打开
+							for (let [key, value] of formdata.entries()) {
+							    console.log(`${key}: ${value}`);
+							}
+							
+							//向服务器发送请求，存储更新后的数据
+							$.ajax({
+								url: baseConfigIp + baseConfigPort + 'saveHplocator.cgi',
+								data: formdata,
+								type: 'post',
+								processData: false,
+								contentType: false,
+								success: function(data) {
+									if (data.resultCode == 0) {
+										mui.alert('保存成功')
+									} else {
+										mui.alert('保存失败，请重试')
+									}
+								}
+							});
+						}
+					})
+				});
+
+				//遍历form表单，获取表单中的数据
+				$.fn.serializeObject = function() {
+					var o = {};
+					var a = this.serializeArray();
+					$.each(a, function() {
+						if (o[this.name]) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};
+			});
+			
+			/**
+			 * 设备型号变化时触发波特率赋值的函数
+			 */
+			function updateBaudrate() {
+				
+			    var deviceTypeSelect = document.getElementById('loadHplocator_gps_device_type');
+			    var baudrateInput = document.getElementById('loadHplocator_gps_baudrate');
+			    var selectedDeviceType = deviceTypeSelect.value;
+				console.log("selectedDeviceType:"+selectedDeviceType);
+			    if (selectedDeviceType === 'BSL100-M') {
+			        baudrateInput.value = '115200';
+			    } else if (selectedDeviceType === 'BSL100-H') {
+			        baudrateInput.value = '38400';
+			    } else {
+			        // 如果需要，可以处理未知设备类型的情况
+			        baudrateInput.value = ''; // 或者设置为默认值
+			    }
+			}
+		</script>
+		<script type="text/javascript">
+		</script>
+	</body>
+</html>

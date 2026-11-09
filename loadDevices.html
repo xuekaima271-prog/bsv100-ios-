@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-btn-save { 
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+			.mui-input-blackColor {
+				background-color: #F2F4F5;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">设备信息</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadGlobal_config_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">设备配置</li>
+					<li class="mui-table-view-cell">					
+						<div class="mui-input-row">
+							<label>IMEI</label>
+							<input type="text" style="background-color: #F2F4F5;" id="global_base_imei" name="imei" readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>IMSI</label>
+							<input type="text" style="background-color: #F2F4F5;"  id="global_base_imsi" name="imsi" readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>MAC地址</label>
+							<input type="text" style="background-color: #F2F4F5;" id="global_base_mac" name="mac" readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>CPUID</label>
+							<input type="text" style="background-color: #F2F4F5;" id="global_cpuid" name="cpuid" readonly="readonly">
+						</div>						
+					</li>
+				</ul>
+			</form>
+			
+			<!-- <form class="mui-input-group" id="load_allowstate_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">授权信息</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>授权状态</label>
+							<input style="background-color: #F2F4F5;" type="text" value="未授权"  id="load_allowstate" name="state" readonly="readonly">
+						</div>
+					</li>
+				</ul>
+			</form> -->
+			
+			<form class="mui-input-group" id="load_version_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">软件版本号</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width: 35%;"><img src="url" style="width: 15px;height: 15px;" id="behavior_ver_image">驾驶员行为分析</label>
+							<input type="text" name="behavior_ver" id="load_version_behavior_ver" style="background-color: #F2F4F5; width: 65%;"  readonly="readonly" />
+						</div>
+						<div class="mui-input-row">
+							<label><img src="url" style="width: 15px;height: 15px;" id="hplocator_ver_image">高精度定位</label>							
+							<input type="text" name="hplocator_ver" id="load_version_hplocator_ver" style="background-color: #F2F4F5;"  readonly="readonly" />
+						</div>
+						<div class="mui-input-row">
+							<label><img src="url" style="width: 15px;height: 15px;" id="vstreamrecorder_ver_image">NVR软件</label>
+							<input type="text" name="vstreamrecorder_ver" id="load_version_vstreamrecorder_ver" style="background-color: #F2F4F5;"  readonly="readonly"/>
+						</div>
+						<div class="mui-input-row">
+							<label><img src="url" style="width: 15px;height: 15px;" id="webrtc_ver_image">webrtc推流</label>
+							<input type="text" name="webrtc_ver"	id="load_version_webrtc_ver" style="background-color: #F2F4F5;"  readonly="readonly"/>
+						</div>
+						<div class="mui-input-row">
+							<label><img src="img/2.png" style="width: 15px;height: 15px;" id="miniserver_ver_image">miniserver软件</label>
+							<input type="text" name="miniserver_ver" id="load_version_miniserver_ver"style="background-color: #F2F4F5;"  readonly="readonly"/>
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			
+
+		<!-- 	<div class="mui-button-row" style="height: 40px;margin-top: 10px;">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+			</div> -->
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+
+			//请求的URL地址
+			var baseConfigIp = configIp;
+			
+			//请求的端口号
+			var baseConfigPort = configPort;
+
+			
+			//发送请求获取全局配置的基本信息loadMiniServer.cgi
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadGlobal.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.config;
+					console.log(JSON.stringify(configData))
+					document.getElementById("global_base_imei").value = configData.imei;
+					document.getElementById("global_base_imsi").value = configData.imsi;
+				}
+			});
+		  
+			
+			//获取cpuid
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'getHwInfo.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.message;
+			    console.log(JSON.stringify(configData))					
+					for(let index in configData){
+						let datas = configData[index]						
+							document.getElementById("global_cpuid").value = configData.cpuid;	
+						  document.getElementById("global_base_mac").value = configData.mac;	
+						 
+						
+					}
+				}
+			});
+				
+			//获取版本信息
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'allVersion.cgi',
+				type: 'post',
+				dataType: 'json',
+				success: function(data) {
+				 console.log(JSON.stringify(data))				
+				 for(let index in data){
+					 //console.log(index)
+					 if(data[index]!= ""){	
+						 if(document.getElementById("load_version_"+index) != null){
+							 document.getElementById("load_version_"+index).value = data[index];
+							 document.getElementById(index+"_image").src = "img/2.png";
+						 }					 
+						// if(index!="miniserver_ver"){
+						// 	 document.getElementById("load_allowstate").value = "已授权";
+						// }						 
+				   }else{
+						 if(document.getElementById("load_version_"+index) != null)
+						  document.getElementById(index+"_image").src = "img/1.png";
+					}
+				 }							
+				}
+			});
+			
+			
+		
+			
+			// //点击保存储存信息
+			// document.getElementById('saveBtn').addEventListener('tap', function() {
+			// 	var btnArray = ['否', '是'];
+			// 	mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+			// 		if (e.index == 1) {
+						
+			// 			//获取设备配置表单数据
+			// 			var loadImei_config = $('#global_base_imei').value;
+			// 			var loadImsi_config = $('#global_base_imsi').value;					
+			// 			var datas = {
+			// 				imei: JSON.stringify(loadImei_config),
+			// 				imsi: JSON.stringify(loadImsi_config)
+			// 			};
+			// 			//将获取的数据组装成服务器接受的formdata格式
+			// 			var config = {
+			// 				config: JSON.stringify(datas)
+			// 			}
+			// 			var formdata = new FormData();
+			// 			for (let index in config){
+			// 				console.log(config[index])
+			// 				formdata.append(index,config[index])
+			// 			}
+						
+						
+						
+			// 			//将修改后的数据发送请求给服务器进行保存
+			// 			$.ajax({
+			// 				url: baseConfigIp + baseConfigPort + 'saveGlobal.cgi',
+			// 				data: formdata,
+			// 				type: 'post',
+			// 				processData: false,
+			// 				contentType: false,
+			// 				success: function(data) {
+			// 					if(data.resultCode == 0){
+			// 						mui.alert('保存成功')
+			// 					}else{
+			// 						mui.alert('保存失败，请重试')
+			// 					}
+			// 				}
+			// 			});
+			// 		}
+			// 	})
+			// });
+			
+			//遍历form表单，获取表单中的信息
+			$.fn.serializeObject = function() {
+				var o = {};
+				var a = this.serializeArray();
+				$.each(a, function() {
+					if (o[this.name]) {
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]];
+						}
+						o[this.name].push(this.value || '');
+					} else {
+						o[this.name] = this.value || '';
+					}
+				});
+				return o;
+			};
+		</script>
+		<script type="text/javascript">
+			
+		</script>
+	</body>
+</html>

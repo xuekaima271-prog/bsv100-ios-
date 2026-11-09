@@ -1,0 +1,339 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>添加摄像机</title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0px 0px 0.5%;
+			} */
+			
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-switch {
+				width: 85px;
+			}
+			
+			.mui-btn-save {
+				margin-top: 15px;
+				width: 40%;
+				height: 40px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<h1 class="mui-title">添加摄像机</h1>
+		</header>
+
+		<div class="mui-content">
+			<form class="mui-input-group" id="addCamera_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell">
+						
+						<div class="mui-input-row">
+							<label>摄像头类型</label>
+							<select name="type" id="addCamera_type">
+								<option value="1">IPC</option>
+								<option value="2">UVC</option>
+								<option value="3">AHD</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>编号</label>
+							<input type="text" class="mui-input-clear" name="id" id="addCamera_form_id" placeholder="请输入摄像机编号" />
+						</div>
+
+						<div class="mui-input-row mui-right">
+							<label>启用</label>
+							<div class="mui-switch" name="enable" id="addCamera_enable">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label>保存录像</label>
+							<div class="mui-switch" name="recordEnable" id="addCamera_recordEnable">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+
+						<div id="addCamera_type_IPC">
+							<!-- type == 1 (IPC) -->
+							<div class="mui-input-row">
+								<label>主码流url</label>
+								<input type="text" class="mui-input-clear" name="urlmain" value="rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=0.sdp" />
+							</div>
+							<div class="mui-input-row">
+								<label>子码流url</label>
+								<input type="text" class="mui-input-clear" name="urlsub" value="rtsp://192.168.1.10:554/user=admin&password=&channel=1&stream=1.sdp" />
+							</div>
+						</div>
+						
+						<div id="addCamera_type_UA" style="display: none;">
+							<div id="addCamera_type_UVC">
+								<!-- type == 2 (UVC) -->
+								<div class="mui-input-row">
+									<label>设备名称</label>
+									<input type="text" class="mui-input-clear" value="/dev/video10" name="device"
+										id="device" placeholder="/dev/video10" />
+								</div>
+							</div>
+							<div id="addCamera_type_AHD">
+								<!-- type == 3 (mipi) -->
+								<div class="mui-input-row">
+									<label>设备名称</label>
+									<input type="text" class="mui-input-clear" name="device" value="/dev/video5" placeholder="/dev/video5" />
+								</div>
+							</div>
+							
+							<div class="mui-input-row" id="addCamera_showTitle">
+								<label>显示名称</label>
+								<div class="mui-switch mui-active" id="addCamera_showTitle_switch" name="showTitle">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</div>
+							<div class="mui-input-row" id="addCamera_title">
+								<label>摄像机名称</label>
+								<input type="text" class="mui-input-clear" name="title" placeholder="请输入摄像机名称"  />
+							</div>
+							<div class="mui-input-row">
+								<label>字体尺寸</label>
+								<input type="text" class="mui-input-clear" name="titleFont" value="36" />
+							</div>
+							<div class="mui-input-row">
+								<label>帧率</label>
+								<input type="text" class="mui-input-clear" name="frameRate" value="20" />
+							</div>
+							<div class="mui-input-row">
+								<label>码率(kb)</label>
+								<input type="text" class="mui-input-clear" name="bitRate" value="768" />
+							</div>
+							<div class="mui-input-row">
+								<label>录I帧间隔</label>
+								<input type="text" class="mui-input-clear" name="iGap" value="40" />
+							</div>
+							<div class="mui-input-row">
+								<label>主码流宽度</label>
+								<input type="text" class="mui-input-clear" name="mainWidth" value="1280" />
+							</div>
+							<div class="mui-input-row">
+								<label>主码流高度</label>
+								<input type="text" class="mui-input-clear" name="mainHeight" value="720" />
+							</div>
+							
+							<div class="mui-input-row" id="addCamera_subStream">
+								<label>支持子码流</label>
+								<div class="mui-switch mui-active" id="addCamera_subStream_switch" name="subStream">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</div>
+							<div id="addCamera_subStream_div">
+								<div class="mui-input-row">
+									<label>子码流宽度</label>
+									<input type="text" class="mui-input-clear" name="subWidth" value="640" />
+								</div>
+								<div class="mui-input-row">
+									<label>子码流高度</label>
+									<input type="text" class="mui-input-clear" name="subHeight" value="360" />
+								</div>
+								<div class="mui-input-row">
+									<label>I帧间隔</label>
+									<input type="text" class="mui-input-clear" name="subIGap" value="40" />
+								</div>
+								<div class="mui-input-row">
+									<label>码率(kb)</label>
+									<input type="text" class="mui-input-clear" name="subBitRate" value="256" />
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">确认添加</button>
+			</div>
+		</div>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			
+			mui.plusReady(function () {
+				
+					//新增摄像头信息
+			    var addcamera;
+					
+			    //摄像头类型改变，基础信息输入框隐藏或者展示
+			    document.getElementById('addCamera_type').addEventListener('change',function(){
+			    	var typeValue = document.getElementById('addCamera_type').value;
+			    	if (typeValue == '1') {
+			    		document.getElementById('addCamera_type_IPC').style.display = '';
+			    		document.getElementById('addCamera_type_UA').style.display = 'none';
+			    	} else if (typeValue == '2') {
+			    		document.getElementById('addCamera_type_IPC').style.display = 'none';
+			    		document.getElementById('addCamera_type_UA').style.display = '';
+			    		document.getElementById('addCamera_type_UVC').style.display = '';
+			    		document.getElementById('addCamera_type_AHD').style.display = 'none';
+			    	}else if (typeValue == '3') {
+			    		document.getElementById('addCamera_type_IPC').style.display = 'none';
+			    		document.getElementById('addCamera_type_UA').style.display = '';
+			    		document.getElementById('addCamera_type_UVC').style.display = 'none';
+			    		document.getElementById('addCamera_type_AHD').style.display = '';
+			    	}
+			    });
+			    
+			    //展示摄像机名称时，展开名称信息，反之隐藏
+			    document.getElementById('addCamera_showTitle').addEventListener('toggle',function(event){
+			    	if (event.detail.isActive) {
+			    		document.getElementById('addCamera_title').style.display = '';
+			    	} else {
+			    		document.getElementById('addCamera_title').style.display = 'none';
+			    	}
+			    });
+			    
+			    //支持子码流时，展开子码流对应信息，反之隐藏
+			    document.getElementById('addCamera_subStream').addEventListener('toggle',function(event){
+			    	if (event.detail.isActive) {
+			    		document.getElementById('addCamera_subStream_div').style.display = '';
+			    	} else {
+			    		document.getElementById('addCamera_subStream_div').style.display = 'none';
+			    	}
+			    });
+			    
+			    document.getElementById('saveBtn').addEventListener('tap',function(){
+			    
+						//获取表单数据
+			    	var addCameraD = $('#addCamera_form').serializeObject();
+			    	var enableIsActivity = document.getElementById("addCamera_enable").classList.contains("mui-active");
+			    	var recordEnableIsActivity = document.getElementById("addCamera_recordEnable").classList.contains("mui-active");
+						
+						//如果ID为空，则打断数据提交
+						if (addCameraD.id == null || addCameraD.id == "") {
+							mui.alert("请完善设备信息！");
+							return
+						};
+						
+						//是否启用
+			    	if (enableIsActivity) {
+			    		addCameraD.enable = true;
+			    	}else{
+			    		addCameraD.enable = 'false';
+			    	};
+			    	
+						//是否保存录像
+			    	if (recordEnableIsActivity) {
+			    		addCameraD.recordEnable = true;
+			    	}else{
+			    		addCameraD.recordEnable = 'false';
+			    	};
+			    	
+			    	//当类型为2或3时，给开关对应的字段赋值
+			    	if (addCameraD.type == '2' || addCameraD.type == '3') {
+			    		var showTitleIsActivity = document.getElementById("addCamera_showTitle_switch").classList.contains("mui-active");
+			    		var subStreamEnableIsActivity = document.getElementById("addCamera_subStream_switch").classList.contains("mui-active");
+							
+							addCameraD.urlmain == "";
+							addCameraD.urlsub == "";
+							
+							//是否显示名称
+			    		if (showTitleIsActivity) {
+			    			addCameraD.showTitle = true;
+			    		}else{
+			    			addCameraD.showTitle = 'false';
+			    		};
+							
+							//名称值转换
+							if (addCameraD.title == "") {
+								addCameraD.title = "xxx";
+							};
+							
+			    		//是否支持子码流
+			    		if (subStreamEnableIsActivity) {
+			    			addCameraD.subStream = true;
+			    		}else{
+			    			addCameraD.subStream = 'false';
+			    		};
+							
+							//设备名称控制
+							if (addCameraD.type == '2'){
+								addCameraD.device = "/dev/video10"
+							} else if (addCameraD.type == '3') {
+								addCameraD.device = "/dev/video5"
+							};
+							
+			    	}else if (addCameraD.type == '1') {
+							addCameraD.device = "";
+							addCameraD.showTitle = "";
+							addCameraD.title = "";
+							addCameraD.titleFont = "";
+							addCameraD.frameRate = "";
+							addCameraD.bitRate = "";
+							addCameraD.iGap = "";
+							addCameraD.subStream = "";
+							addCameraD.mainWidth = "";
+							addCameraD.mainHeight = "";
+							addCameraD.subWidth = "";
+							addCameraD.subHeight = "";
+							addCameraD.subIGap = "";
+							addCameraD.subBitRate = "";
+						};
+						
+						//去除form序列化中的空值
+			    	var camera = {};
+			    	for (let index in addCameraD) {
+								if (addCameraD[index]) {
+									camera[index] = addCameraD[index];
+							}
+			    	};
+						
+						//将摄像机信息转化为json字符串，用于页面传值
+			    	addcamera = JSON.stringify(camera);
+						
+						//将新增的摄像机传值给摄像头列表
+						//进行预加载
+						var prPage = mui.preload({url:'NVRCameras.html',id:'NVRCameras.html'});
+						mui.fire(prPage,'saveCamera',{data:addcamera});
+						mui.openWindow({
+							url:'NVRCameras.html',
+							id:'NVRCameras.html'
+						});
+						
+						//清空form表单
+						$("#addCamera_form_id").val("");
+						$("#addCamera_type").val("1");
+						document.getElementById('addCamera_type_IPC').style.display = '';
+						document.getElementById('addCamera_type_UA').style.display = 'none';
+			    });
+			    
+			    //遍历form表单，获取表单中的数据
+			    $.fn.serializeObject = function() {
+			    	var o = {};
+			    	var a = this.serializeArray();
+			    	$.each(a, function() {
+			    		if (o[this.name]) {
+			    			if (!o[this.name].push) {
+			    				o[this.name] = [o[this.name]];
+			    			}
+			    			o[this.name].push(this.value || '');
+			    		} else {
+			    			o[this.name] = this.value || '';
+			    		}
+			    	});
+			    	return o;
+			    };
+			})
+		</script>
+
+	</body>
+
+</html>

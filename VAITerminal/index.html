@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+
+			.mui-input-blackColor {
+				background-color: #F2F4F5;
+			}
+
+			/* #devices{
+				height: 7vh;
+			}
+			#information{
+				height: 90vh;
+			} */
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="devices">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">终端信息</a>
+		</header>
+		<!-- <div id="refreshContainer" class="mui-content mui-scroll-wrapper" id="information" style="overflow: auto;"> -->
+		<div class="mui-content">
+			<form class="mui-input-group" id="global_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">设备信息</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>IMEI</label>
+							<input type="text" style="background-color: #F2F4F5;" id="global_base_imei" name="imei" readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>IMSI</label>
+							<input type="text" style="background-color: #F2F4F5;"  id="global_base_imsi" name="imsi" readonly="readonly">
+						</div>
+					</li>
+				</ul>
+			</form>
+			<!-- <form class="mui-input-group" id="VAITerminal_data_form">
+					<ul class="mui-table-view mui-input-group">
+						<li class="mui-table-view-cell mui-table-view-cell-title">数据信息</li>
+						<li class="mui-table-view-cell">
+							<div class="mui-input-row">
+								<label>位置上传间隔</label>
+								<select name="interval" id="VAITerminal_data_interval">
+									<option value="1">1秒</option>
+									<option value="2">2秒</option>
+									<option value="3">3秒</option>
+									<option value="4">4秒</option>
+									<option value="5">5秒</option>
+									<option value="6">6秒</option>
+									<option value="7">7秒</option>
+									<option value="8">8秒</option>
+									<option value="9">9秒</option>
+									<option value="10">10秒</option>
+								</select>
+							</div>
+						</li>
+					</ul>
+				</form> -->
+			
+			<form class="mui-input-group" id="VAITerminal_jt808_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">终端信息</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width: 15%;">鉴权码</label>
+							<textarea type="text" name="authentication" id="VAITerminal_jt808_authentication"
+								readonly="readonly" style="text-align: right; width: 85%;"></textarea>
+							<!-- 	<input type="text" name="authentication" id="VAITerminal_jt808_authentication"
+									readonly="readonly"/> -->
+						</div>
+						<div class="mui-input-row">
+							<label>车牌颜色</label>
+							<!-- <input type="number" name="carPlateColor" id="VAITerminal_jt808_carPlateColor" /> -->
+							<select name="carPlateColor" id="VAITerminal_jt808_carPlateColor">
+								<option value="1">蓝色</option>
+								<option value="2">黄色</option>
+								<option value="3">黑色</option>
+								<option value="4">白色</option>
+								<option value="9">其他</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>车牌号</label>
+							<input type="text" name="carPlateNum" id="VAITerminal_jt808_carPlateNum" />
+						</div>
+						<div class="mui-input-row">
+							<label>制造商ID</label>
+							<input type="text" name="manufacturer" id="VAITerminal_jt808_manufacturer" />
+						</div>
+						<div class="mui-input-row">
+							<label>联系方式</label>
+							<input type="number" name="phone" id="VAITerminal_jt808_phone" />
+						</div>
+						<div class="mui-input-row">
+							<label>型号</label>
+							<input type="text" name="terminalModel" id="VAITerminal_jt808_terminalModel" readonly />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- <form class="mui-input-group" id="VAITerminal_server_form">
+					<ul class="mui-table-view mui-input-group">
+						<li class="mui-table-view-cell mui-table-view-cell-title">(808)服务器信息</li>
+						<li class="mui-table-view-cell">
+							<div class="mui-input-row">
+								<label>IP地址</label>
+								<input type="text" id="VAITerminal_server_host" name="host">
+							</div>
+							<div class="mui-input-row">
+								<label>端口号</label>
+								<input type="number" id="VAITerminal_server_port" name="port">
+							</div>
+						</li>
+					</ul>
+				</form> -->
+
+			<div class="mui-button-row" style="margin-bottom: 10px;">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn"
+					style="width: 80%;border-radius: 20px;margin-top: 10px;">保存</button>
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveAndLogin"
+					style="width: 80%;border-radius: 20px;margin-top: 10px;">保存并注册</button>
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveAndLogout"
+					style="width: 80%;border-radius: 20px;margin-top: 10px;background-color: red;border-color: red;">注销</button>
+			</div>
+		</div>
+
+		<script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.js"></script>
+		<script src="../js/mqtt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mqttUtil.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+
+			//请求的URL地址
+			var baseConfigIp = configIp;
+			//请求的端口号
+			var baseConfigPort = configPort;
+
+			var imei = "";
+			var imsi = "";
+
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadGlobal.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.config;
+					console.log(JSON.stringify(configData))
+					imei = configData.imei;
+					imsi = configData.imsi;
+					document.getElementById("global_base_imei").value = configData.imei;
+					document.getElementById("global_base_imsi").value = configData.imsi;
+				}
+			});
+
+			queryAllData();
+			//验证制造商id的输入格式			
+			function verifyMadeId() {
+				var len;
+				var manufacturer = document.getElementById('VAITerminal_jt808_manufacturer').value;
+				for (var i = 0; i < manufacturer.length; i++) {
+					if ((manufacturer[i].charCodeAt()) >= 48 && (manufacturer[i].charCodeAt()) <= 57) {
+						len = manufacturer.length
+					} else if ((manufacturer[i].charCodeAt()) >= 65 && (manufacturer[i].charCodeAt()) <= 90) {
+						len = manufacturer.length
+					} else if ((manufacturer[i].charCodeAt()) >= 97 && (manufacturer[i].charCodeAt()) <= 122) {
+						len = manufacturer.length
+					} else if ((manufacturer[i].charCodeAt()) > 122) {
+						len = manufacturer.length * 3
+					}
+				}
+				return len
+			}
+
+			/**
+			 * 点击保存按钮只保存，不注册
+			 */
+			$("#saveBtn").on('click', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						//获取位置上传间隔信息表单数据
+						// var VAITerminal_data = $('#VAITerminal_data_form').serializeObject();
+						// 获取终端基本信息
+						var VAITerminal_jt808 = $('#VAITerminal_jt808_form').serializeObject();
+						// 获取服务器配置信息
+						// var VAITerminal_server = $('#VAITerminal_server_form').serializeObject();
+						var len = verifyMadeId();
+						if (len > 11) {
+							mui.alert('制造商ID过长，请重新输入')
+							return
+						}
+						//获取设备配置表单数据
+						var VAITerminal_config = {};
+						// VAITerminal_config.data = VAITerminal_data;
+						VAITerminal_config.jt808 = VAITerminal_jt808;
+						// VAITerminal_config.server = VAITerminal_server;
+						// 验证车牌号
+						// var express =
+						// 	/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/;
+						// if (!express.test(VAITerminal_config.jt808.carPlateNum)) {
+						// 	mui.alert('请输入正确车牌号', '提示', '确认');
+						// 	return
+						// }
+						// 验证手机号
+						var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+						if (!myreg.test(VAITerminal_config.jt808.phone)) {
+							mui.alert('请输入正确手机号', '提示', '确认');
+							return
+						}
+						// 将字符串型数据转换为数字型
+						// VAITerminal_config.data.interval = Number(VAITerminal_config.data.interval);
+						VAITerminal_config.jt808.carPlateColor = Number(VAITerminal_config.jt808.carPlateColor);
+						// VAITerminal_config.server.port = Number(VAITerminal_config.server.port);
+						//将获取的数据组装成服务器接受的formdata格式
+						var config = {
+							config: JSON.stringify(VAITerminal_config)
+						}
+						var formdata = new FormData();
+						for (let index in config) {
+							formdata.append(index, config[index])
+						}
+
+						//将修改后的数据发送请求给服务器进行保存
+						$.ajax({
+							url: baseConfigIp + baseConfigPort + 'saveVAITerminal_JT.cgi',
+							data: formdata,
+							type: 'post',
+							processData: false,
+							contentType: false,
+							success: function(data) {
+								if (data.resultCode == 0) {
+									mui.alert('保存成功')
+								} else {
+									mui.alert('保存失败，请重试')
+								}
+							}
+						});
+					}
+				})
+			});
+
+			/**
+			 * 注销按钮，点击注销终端
+			 */
+			$("#saveAndLogout").on('click', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认注销，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						let str = {
+							"head": {
+								"event": "_UNREGISTER"
+							},
+							// "type": "logout"
+						}
+						this.ws_logs(str);
+						// 收到消息的处理程序
+						client.onMessageArrived = onMessageArrived
+					}
+				})
+			});
+
+			/**
+			 * 保存并注册终端
+			 */
+			$('#saveAndLogin').on('click', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						//获取位置上传间隔信息表单数据
+						// var VAITerminal_data = $('#VAITerminal_data_form').serializeObject();
+						// 获取终端基本信息
+						var VAITerminal_jt808 = $('#VAITerminal_jt808_form').serializeObject();
+						// 获取服务器配置信息
+						// var VAITerminal_server = $('#VAITerminal_server_form').serializeObject();						
+						len = verifyMadeId();
+						if (len > 11) {
+							mui.alert('制造商ID过长，请重新输入')
+							return
+						}
+						//获取设备配置表单数据
+						var VAITerminal_config = {};
+						// VAITerminal_config.data = VAITerminal_data;
+						VAITerminal_config.jt808 = VAITerminal_jt808;
+						// VAITerminal_config.server = VAITerminal_server;
+
+						// 验证车牌号--备用代码
+						// var express =
+						// 	/^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/;
+						// if (!express.test(VAITerminal_config.jt808.carPlateNum)) {
+						// 	mui.alert('请输入正确车牌号', '提示', '确认');
+						// 	return
+						// }
+
+						// 验证手机号
+						var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+						if (!myreg.test(VAITerminal_config.jt808.phone)) {
+							mui.alert('请输入正确手机号', '提示', '确认');
+							return
+						}
+						// 将字符串型数据转换为数字型
+						// VAITerminal_config.data.interval = Number(VAITerminal_config.data.interval);
+						VAITerminal_config.jt808.carPlateColor = Number(VAITerminal_config.jt808.carPlateColor);
+						// VAITerminal_config.server.port = Number(VAITerminal_config.server.port);
+						//将获取的数据组装成服务器接受的formdata格式
+						var config = {
+							config: JSON.stringify(VAITerminal_config)
+						}
+						var formdata = new FormData();
+						for (let index in config) {
+							formdata.append(index, config[index])
+						}
+						
+						if (imei == "") {
+							mui.alert('IMEI暂未获取，请重启设备后再重试！', '提示', '确认');
+							return
+						}
+						
+						if (imsi == "") {
+							mui.alert('IMSI暂未获取，请重启设备后再重试！', '提示', '确认');
+							return
+						}
+						
+						for (let [key, value] of formdata.entries()) {
+						    console.log(`${key}: ${value}`);
+						}
+						
+						//将修改后的数据发送请求给服务器进行保存
+						let that = this
+						$.ajax({
+							url: baseConfigIp + baseConfigPort + 'saveVAITerminal_JT.cgi',
+							data: formdata,
+							type: 'post',
+							processData: false,
+							contentType: false,
+							success: function(data) {
+								console.log(JSON.stringify(data))
+								if (data.resultCode == 0) {
+									let str = {
+										// "type": "login"
+										"head": {
+											"event": "_REGISTER"
+										}
+									}
+									that.ws_logs(str);
+									// 收到消息的处理程序
+									client.onMessageArrived = onMessageArrived
+								} else {
+									mui.alert('保存失败，请重试')
+								}
+							}
+						});
+					}
+				})
+			})
+
+			/**
+			 * 查询终端信息方法
+			 */
+			function queryAllData() {
+				//发送请求获取全局配置的基本信息
+				$.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadVAITerminal_JT.cgi',
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						console.log(JSON.stringify(data))
+						var configData = data.config;
+						for (let baseIndex in configData) {
+							if (configData.jt808.isRegistered) {
+								// if (baseIndex == "data") {
+								// 位置上传间隔
+								// let Data = configData[baseIndex];
+								// for (let DataIndex in Data) {
+								// 	if (document.getElementById("VAITerminal_data_" + DataIndex) != null) {
+								// 		document.getElementById("VAITerminal_data_" + DataIndex).value = Data[DataIndex];
+								// 		$("#"+"VAITerminal_data_" + DataIndex).attr('disabled','disabled')
+								// 	}
+								// }
+								// } 
+								if (baseIndex == "jt808") {
+									// jt808信息
+									let jt808 = configData[baseIndex];
+									for (let jt808Index in jt808) {
+										if (document.getElementById("VAITerminal_jt808_" + jt808Index) != null) {
+											document.getElementById("VAITerminal_jt808_" + jt808Index).value = jt808[
+												jt808Index];
+											document.getElementById("VAITerminal_jt808_" + jt808Index).readOnly =
+												true;
+										}
+										if (jt808Index == 'carPlateColor') {
+											$("#" + "VAITerminal_jt808_" + jt808Index).attr('disabled', 'disabled')
+										}
+									}
+								} else if (baseIndex == "server") {
+									// 服务器信息
+									let server = configData[baseIndex];
+									for (let serverIndex in server) {
+										if (document.getElementById("VAITerminal_server_" + serverIndex) != null) {
+											document.getElementById("VAITerminal_server_" + serverIndex).value =
+												server[serverIndex];
+											document.getElementById("VAITerminal_server_" + serverIndex).readOnly =
+												true;
+										}
+									}
+								}
+							} else if (!configData.jt808.isRegistered) {
+								// if (baseIndex == "data") {
+								// 	// 位置上传间隔
+								// 	let Data = configData[baseIndex];
+								// 	for (let DataIndex in Data) {
+								// 		if (document.getElementById("VAITerminal_data_" + DataIndex) != null) {
+								// 			document.getElementById("VAITerminal_data_" + DataIndex).value = Data[DataIndex];
+								// 			$("#"+"VAITerminal_data_" + DataIndex).removeAttr('disabled')
+								// 		}
+								// 	}
+								// } else 
+								if (baseIndex == "jt808") {
+									// jt808信息
+									let jt808 = configData[baseIndex];
+									for (let jt808Index in jt808) {
+										if (document.getElementById("VAITerminal_jt808_" + jt808Index) != null) {
+											document.getElementById("VAITerminal_jt808_" + jt808Index).value = jt808[
+												jt808Index];
+											document.getElementById("VAITerminal_jt808_" + jt808Index).readOnly =
+												false;
+											if (jt808Index == 'authentication') {
+												document.getElementById("VAITerminal_jt808_" + jt808Index).readOnly =
+													true;
+											}
+										}
+										if (jt808Index == 'carPlateColor') {
+											$("#" + "VAITerminal_jt808_" + jt808Index).removeAttr('disabled')
+										}
+									}
+								} else if (baseIndex == "server") {
+									// 服务器信息
+									let server = configData[baseIndex];
+									for (let serverIndex in server) {
+										if (document.getElementById("VAITerminal_server_" + serverIndex) != null) {
+											document.getElementById("VAITerminal_server_" + serverIndex).value =
+												server[
+													serverIndex];
+											document.getElementById("VAITerminal_server_" + serverIndex).readOnly =
+												false;
+										}
+									}
+								}
+							}
+						}
+						if (configData.jt808.isRegistered) {
+							document.getElementById("saveBtn").style.display = 'none';
+							document.getElementById("saveAndLogin").style.display = 'none';
+							document.getElementById("saveAndLogout").style.display = '';
+						} else {
+							document.getElementById("saveAndLogout").style.display = 'none';
+							document.getElementById("saveBtn").style.display = '';
+							document.getElementById("saveAndLogin").style.display = '';
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+
+			.mui-input-blackColor {
+				background-color: #F2F4F5;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">全局配置</a>
+		</header>
+		<div class="mui-content">
+
+			<form class="mui-input-group" id="loadGlobal_mqtt_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">消息总线</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width: 15%;">设备ID</label>
+							<input type="text" id="global_base_deviceId" name="deviceId"
+								style="width: 75%;position: absolute;left: 15%;">
+							<img src="./img/scan.png" style="width: 8%;position: absolute;right: 2%;" id="scanDevice">
+						</div>
+						<div class="mui-input-row" style="height: 70px;display: none;">
+							<label style="margin-top: 15px;width: 15%;">授权码</label>
+							<textarea type="text" id="global_base_license" name="license"
+								style="height: 80px;width: 70%;"></textarea>
+						</div>
+						<div class="mui-input-row">
+							<label>服务器地址</label>
+							<input type="text" name="ip" id="global_mqtt_ip" />
+						</div>
+						<div class="mui-input-row">
+							<label>服务器端口</label>
+							<input type="number" name="port" id="global_mqtt_port" />
+						</div>
+						<div class="mui-input-row">
+							<label>用户名</label>
+							<input type="text" name="user" id="global_mqtt_user" />
+						</div>
+						<div class="mui-input-row">
+							<label>密码</label>
+							<input type="password" class="mui-input-password" name="passWord"
+								id="global_mqtt_passWord" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- 升级信息 -->
+			<form class="mui-input-group" id="loadUpgrade_in_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">升级信息</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>升级服务器</label>
+							<input type="text" name="upgradeHost" id="global_upgrade_upgradeHost" />
+						</div>
+						<div class="mui-input-row">
+							<label>升级端口</label>
+							<input type="number" name="upgradePort" id="global_upgrade_upgradePort" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- 心跳信息 -->
+			<form class="mui-input-group" id="heatbeat_in_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">心跳服务</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>心跳服务器</label>
+							<input type="text" name="heartbeatHost" id="global_heartbeat_host" />
+						</div>
+						<div class="mui-input-row">
+							<label>心跳端口</label>
+							<input type="number" name="heartbeatPort" id="global_heartbeat_port" />
+						</div>
+						<div class="mui-input-row">
+							<label>心跳频率</label>
+							<input type="number" name="heartbeatInterval" id="global_heartbeat_interval" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- FTP信息 -->
+			<form class="mui-input-group" id="ftp_info_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">FTP信息</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>FTP服务器</label>
+							<input type="text" name="ip" id="global_ftp_ip" />
+						</div>
+						<div class="mui-input-row">
+							<label>FTP端口</label>
+							<input type="number" name="port" id="global_ftp_port" />
+						</div>
+						<div class="mui-input-row">
+							<label>用户名</label>
+							<input type="text" name="userName" id="global_ftp_userName" />
+						</div>
+						<div class="mui-input-row">
+							<label>密码</label>
+							<input type="text" name="passWord" id="global_ftp_passWord" />
+						</div>
+						<div class="mui-input-row">
+							<label>文件路径</label>
+							<input type="text" name="fileUrl" id="global_ftp_fileUrl" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- 4G信息 -->
+			<form class="mui-input-group" id="load_wire_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">4G信息</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>4G启用状态</label>
+							<div class="mui-switch" id="global_lte_lteEnable" name="lteEnable">
+								<input type="hidden" id="global_lte_lteEnable_in" name="lteEnable">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row mui-right">
+							<label style="width: 50%;">4G模组</label>
+							<select style="width: 50%;" name="product" id="global_lte_product">
+								<option value="fibocom">fibocom</option>
+								<option value="quectel">quectel</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>检查周期(分钟)</label>
+							<input type="number" name="checkCycle" id="global_lte_checkCycle" />
+						</div>
+						<div class="mui-input-row">
+							<label>设备串口</label>
+							<input type="text" name="devPort" id="global_lte_devPort" />
+						</div>
+						<div class="mui-input-row mui-right">
+							<label style="width: 50%;">波特率</label>
+							<select style="width: 50%;" name="baudrate" id="global_lte_baudrate">
+								<option value="9600">9600</option>
+								<option value="19200">19200</option>
+								<option value="38400">38400</option>
+								<option value="57600">57600</option>
+								<option value="115200">115200</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>接入点名称(APN)</label>
+							<input type="text" name="apn" id="global_lte_apn" />
+						</div>
+						<div class="mui-input-row">
+							<label>供电接口</label>
+							<input type="number" name="powerIo" id="global_lte_powerIO" />
+						</div>
+						<div class="mui-input-row">
+							<label>复位接口</label>
+							<input type="number" name="resetIo" id="global_lte_resetIO" />
+						</div>
+						<div class="mui-input-row" style="display: none;">
+							<label>tryNum</label>
+							<input type="number" name="tryNum" id="global_lte_tryNum" />
+						</div>
+						<div class="mui-input-row" style="display: none;">
+							<label>tryWoringTime</label>
+							<input type="number" name="tryWoringTime" id="global_lte_tryWoringTime" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- 其他配置 -->
+			<form class="mui-input-group" id="loadOther_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">其他配置</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>WIFI密码</label>
+							<input type="text" name="wpa_passphrase" id="loadOther_form_wpa_passphrase" />
+						</div>
+						<div class="mui-input-row">
+							<label>POE启用状态</label>
+							<div class="mui-switch" id="loadOther_form_POEPowerEnable" name="POEPowerEnable">
+								<input type="hidden" id="loadOther_form_POEPowerEnable_in" name="POEPowerEnable">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label>POE端口</label>
+							<input type="text" name="POEId" id="loadOther_form_POEId" />
+						</div>
+						<div class="mui-input-row mui-right">
+							<label style="width: 50%;">日志等级</label>
+							<select style="width: 50%;" name="logLevel" id="loadOther_form_logLevel">
+								<!-- 打印级别低于设定的级别时不会输出打印，数值越大级别越高 -->
+								<option value="0">trace</option>
+								<option value="1">debug</option>
+								<option value="2">info</option>
+								<option value="3">warn</option>
+								<option value="4">err</option>
+								<option value="5">critical</option>
+								<option value="6">off</option>
+							</select>
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<!-- 软件状态 -->
+			<form class="mui-input-group" id="loadApp_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">软件启用状态</li>
+					<li class="mui-table-view-cell" id="app">
+					</li>
+				</ul>
+			</form>
+
+			<div class="mui-button-row" style="height: 40px;margin-top: 10px;">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn"
+					style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+
+			//请求的URL地址
+			var baseConfigIp = configIp;
+
+			//请求的端口号
+			var baseConfigPort = configPort;
+
+			// miniserver原来信息暂存
+			var miniserverOtherDatas = {};
+
+			// global原来信息暂存
+			var globalOtherDatas = {};
+
+			//软件状态列表 
+			var appList = [];
+
+			//发送请求获取全局配置的基本信息
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadGlobal.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.config;
+					//console.log("global-configData-load:" + JSON.stringify(configData));
+					for (let baseIndex in configData) {
+						if (baseIndex == "mqtt") {
+							// 消息总线回显
+							let mqttData = configData[baseIndex];
+							for (let mqttIndex in mqttData) {
+								document.getElementById("global_mqtt_" + mqttIndex).value = mqttData[mqttIndex];
+							}
+						} else if (baseIndex == "log" || baseIndex == "imei" || baseIndex == "imsi" || baseIndex ==
+							"mac" || baseIndex == "ccid" || baseIndex == "jt808_enable") {
+							var logData = configData.log
+							// 日志等级
+							document.getElementById("loadOther_form_logLevel").value = logData.logLevel;
+							globalOtherDatas[baseIndex] = configData[baseIndex]
+						} else if (baseIndex == "heartbeat") {
+							let heartbeat = configData[baseIndex];
+							for (let heartIndex in heartbeat) {
+								document.getElementById("global_heartbeat_" + heartIndex).value = heartbeat[
+									heartIndex];
+							}
+						} else if (baseIndex == "ftp"){
+							let ftpData = configData[baseIndex];
+							for (let ftpIndex in ftpData) {
+								document.getElementById("global_ftp_" + ftpIndex).value = ftpData[ftpIndex];
+							}
+						} else {
+							// 设备ID
+							document.getElementById("global_base_deviceId").value = configData.deviceId;
+							// 授权码
+							document.getElementById("global_base_license").value = configData.license;
+							// 无线密码
+							document.getElementById("loadOther_form_wpa_passphrase").value = configData
+								.wpa_passphrase;
+						}
+					}
+				}
+			});
+
+			//发送请求获取全局配置的基本信息loadMiniServer.cgi
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadMiniServer.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.config;
+					//console.log("miniserver-configData-load:" + JSON.stringify(configData));
+					for (let baseIndex in configData) {
+						if (baseIndex == "upgrade") {
+							// 升级信息回显
+							let upgradeData = configData[baseIndex];
+							for (let upgradeIndex in upgradeData) {
+								document.getElementById("global_upgrade_" + upgradeIndex).value = upgradeData[
+									upgradeIndex];
+							}
+						} else if (baseIndex == "lte") {
+							let lteData = configData[baseIndex];
+							
+							// POEPowerEnable
+							document.getElementById("loadOther_form_POEPowerEnable").value = lteData.POEPowerEnable;
+							// POEId
+							document.getElementById("loadOther_form_POEId").value = lteData.POEId;
+							for (let lteIndex in lteData) {
+								if (document.getElementById("global_lte_" + lteIndex)) {
+									document.getElementById("global_lte_" + lteIndex).value = lteData[lteIndex];
+								}else {
+									
+								}
+							}
+
+						} else if (baseIndex == "app") {
+							miniserverOtherDatas.app = configData[baseIndex]
+						} else if (baseIndex == "http") {
+							miniserverOtherDatas.http = configData[baseIndex]
+						} else if (baseIndex == "server") {
+							miniserverOtherDatas.server = configData[baseIndex]
+						} else {}
+					}
+					// 4g启用状态赋值
+					if (data.config.lte.lteEnable == "true" || data.config.lte.lteEnable == true) {
+						mui("#global_lte_lteEnable").switch().toggle();
+						$('#global_lte_lteEnable_in').val(true);
+					} else {
+						$('#global_lte_lteEnable_in').val(false);
+					}
+					// POEPowerEnable赋值
+					if (data.config.lte.POEPowerEnable == "true" || data.config.lte.POEPowerEnable == true) {
+						mui("#loadOther_form_POEPowerEnable").switch().toggle();
+						$('#loadOther_form_POEPowerEnable_in').val(true);
+					} else {
+						$('#loadOther_form_POEPowerEnable_in').val(false);
+					}
+					// 软件状态动态添加
+					appList = miniserverOtherDatas.app
+					addApp(appList)
+				}
+			});
+
+			//点击保存4g状态信息
+			document.getElementById('global_lte_lteEnable').addEventListener('tap', function() {
+				let stateVal = $('#global_lte_lteEnable_in').val();
+				
+				if (stateVal == "true" || stateVal == true) {
+					$('#global_lte_lteEnable_in').val(false);
+				} else {
+					$('#global_lte_lteEnable_in').val(true);
+				}
+			});
+
+			//点击保存POEPowerEnable状态信息
+			document.getElementById('loadOther_form_POEPowerEnable').addEventListener('tap', function() {
+				let stateVal = $('#loadOther_form_POEPowerEnable_in').val();
+				if (stateVal == "true" || stateVal == true) {
+					$('#loadOther_form_POEPowerEnable_in').val(false);
+				} else {
+					$('#loadOther_form_POEPowerEnable_in').val(true);
+				}
+			});
+
+			function addApp(appList) {
+				$("#app").html("");
+				var $list = "";
+				for (let index = 0; index < appList.length; index++) {
+					$list += '<div class="mui-input-row" >' +
+						'<label>' + appList[index].appName + '</label>' +
+						'<div class="mui-switch switch-app" id="loadApp_form_' + appList[index].appName + '" name="enable">' +
+						'<input type="hidden" id="loadApp_form_' + appList[index].appName + '_in" name="enable">' +
+						'<div class="mui-switch-handle"></div>' +
+						'</div>' +
+						'</div>';
+
+				}
+				$("#app").html($list);
+				mui('.mui-switch')['switch']();
+				for (var index = 0; index < appList.length; index++) {
+					if (appList[index].enable == "true" || appList[index].enable == true) {
+						mui("#loadApp_form_" + appList[index].appName).switch().toggle();
+						$("#loadApp_form_" + appList[index].appName + "_in").val(true);
+						document.getElementById("loadApp_form_" + appList[index].appName).classList.add('mui-active')
+					} else {
+						$("#loadApp_form_" + appList[index].appName + "_in").val(false);
+						document.getElementById("loadApp_form_" + appList[index].appName).classList.remove('mui-active');
+					}
+				}
+			}
+
+			//点击保存储存信息
+			document.getElementById('saveBtn').addEventListener('tap', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						// 获取消息总线表单数据
+						var loadGlobal_mqtts = $('#loadGlobal_mqtt_form').serializeObject();
+						// 消息总线服务器信息和用户名密码暂存
+						var loadGlobal_mqtt = {};
+						// 获取其他配置信息
+						var otherConfig = $('#loadOther_form').serializeObject();
+						for (let index in loadGlobal_mqtts) {
+							if (index == 'license' || index == 'deviceId') {
+								globalOtherDatas[index] = loadGlobal_mqtts[index]
+							} else {
+								loadGlobal_mqtt[index] = loadGlobal_mqtts[index]
+							}
+						}
+						//消息总线端口号（转化为整型）
+						loadGlobal_mqtt.port = Number(loadGlobal_mqtt.port);
+						otherConfig.logLevel = Number(otherConfig.logLevel);
+						globalOtherDatas['mqtt'] = loadGlobal_mqtt;
+						globalOtherDatas.wpa_passphrase = otherConfig.wpa_passphrase;
+						globalOtherDatas.log.logLevel = otherConfig.logLevel;
+						
+						//获取ftp数据
+						var loadGlobal_ftp = $('#ftp_info_form').serializeObject();
+						loadGlobal_ftp.port = Number(loadGlobal_ftp.port);
+						globalOtherDatas['ftp'] = loadGlobal_ftp;
+						
+						//获取心跳服务数据
+						var loadheartbeat_in = $('#heatbeat_in_form').serializeObject();
+						var heartbeat = {}
+						heartbeat.host = loadheartbeat_in.heartbeatHost
+						heartbeat.port = Number(loadheartbeat_in.heartbeatPort)
+						heartbeat.interval = Number(loadheartbeat_in.heartbeatInterval)
+						
+						globalOtherDatas['heartbeat'] = heartbeat
+						//将获取的数据组装成服务器接受的formdata格式
+						var config = {
+							config: JSON.stringify(globalOtherDatas)
+						}
+						
+						var formdataOne = new FormData();
+						for (let index in config) {
+							formdataOne.append(index, config[index])
+						}
+
+						//获取升级信息表单数据		
+						var loadUpgrade_in = $('#loadUpgrade_in_form').serializeObject();
+						//获取4G信息表单数据
+						var loadWire = $('#load_wire_form').serializeObject();
+						// 获取4g信息中的pinghost
+						var pingHost = document.getElementById("global_mqtt_ip").value
+						// 升级信息端口转化为数值型
+						loadUpgrade_in.upgradePort = Number(loadUpgrade_in.upgradePort);
+						// 4g信息波特率转化为数值型
+						loadWire.baudrate = Number(loadWire.baudrate);
+						// 4g信息检查周期转化为数值型
+						loadWire.checkCycle = Number(loadWire.checkCycle);
+						// 供电接口
+						loadWire.powerIo = Number(loadWire.powerIo);
+						// 复位接口
+						loadWire.resetIo = Number(loadWire.resetIo);
+						// 4g信息POEId转化为数值型
+						otherConfig.POEId = Number(otherConfig.POEId);
+						
+						loadWire.tryNum = Number(loadWire.tryNum);
+						loadWire.tryWoringTime = Number(loadWire.tryWoringTime);
+						
+						// 4g启用状态转化为布尔型
+						if (loadWire.lteEnable == 'true') {
+							loadWire.lteEnable = true
+						} else {
+							loadWire.lteEnable = false
+						}
+						// 4gPOEPowerEnable转化为布尔型
+						if (otherConfig.POEPowerEnable == 'true') {
+							otherConfig.POEPowerEnable = true
+						} else {
+							otherConfig.POEPowerEnable = false
+						}
+						// 获取软件状态
+						var appArr = []
+						for (var index = 0; index < appList.length; index++) {
+							var dicp = document.getElementById("loadApp_form_" + appList[index].appName);
+							var para = dicp.classList.contains("mui-active")
+							var appObj = {
+								appName: appList[index].appName,
+								id: appList[index].id,
+								path: appList[index].path,
+								enable: para
+							}
+							appArr.push(appObj)
+						}
+						// 封装保存数据
+						var datas = {
+							lte: {
+								lteEnable: loadWire.lteEnable,
+								product: loadWire.product,
+								checkCycle: loadWire.checkCycle,
+								devPort: loadWire.devPort,
+								baudrate: loadWire.baudrate,
+								apn: loadWire.apn,
+								powerIO: loadWire.powerIo,
+								resetIO: loadWire.resetIo,
+								pingHost: pingHost,
+								POEPowerEnable: otherConfig.POEPowerEnable,
+								POEId: otherConfig.POEId,
+								tryNum: loadWire.tryNum,
+								tryWoringTime: loadWire.tryWoringTime
+							},
+							upgrade: loadUpgrade_in,
+							http: miniserverOtherDatas.http,
+							server: miniserverOtherDatas.server,
+							app: appArr
+						};
+						
+						var configs = {
+							config: JSON.stringify(datas)
+						};
+						
+						var formdataTwo = new FormData();
+						for (let index in configs) {
+							formdataTwo.append(index, configs[index])
+						};
+
+						// 保存设备ID信息到webrtc推流
+						var deviceId = document.getElementById("global_base_deviceId").value
+						var configD = {
+							license: deviceId
+						}
+						var formdataG = new FormData();
+						var configss = {
+							config: JSON.stringify(configD)
+						};
+						for (let index in configss) {
+							formdataG.append(index, configss[index])
+						};
+						
+						// 打印配置信息 - 调试时可以打开
+						/* for (let [key, value] of formdataOne.entries()) {
+						    console.log(`${key}: ${value}`);
+						}
+						
+						for (let [key, value] of formdataTwo.entries()) {
+						    console.log(`${key}: ${value}`);
+						}
+						
+						for (let [key, value] of formdataG.entries()) {
+						    console.log(`${key}: ${value}`);
+						} */
+						
+						//将修改后的数据发送请求给服务器进行保存
+						$.ajax({
+							url: baseConfigIp + baseConfigPort + 'saveGlobal.cgi',
+							data: formdataOne,
+							type: 'post',
+							processData: false,
+							contentType: false,
+							success: function(data) {
+								//console.log("data"+ JSON.stringify(data));
+								if (data.resultCode == 0) {
+									//将修改后的数据发送请求给服务器进行保存
+									$.ajax({
+										url: baseConfigIp + baseConfigPort +
+											'saveMiniServer.cgi',
+										data: formdataTwo,
+										type: 'post',
+										processData: false,
+										contentType: false,
+										success: function(data) {
+											if (data.resultCode == 0) {
+												$.ajax({
+													url: baseConfigIp +
+														baseConfigPort +
+														'saveWebRtcClient.cgi',
+													data: formdataG,
+													type: 'post',
+													processData: false,
+													contentType: false,
+													success: function(data) {
+														if (data
+															.resultCode == 0
+															) {
+															mui.alert('保存成功')
+														} else {
+															mui.alert(
+																'保存失败，请重试'
+																)
+														}
+													}
+												});
+											} else {
+												mui.alert('保存失败，请重试')
+											}
+										}
+									});
+								} else {
+									mui.alert('保存失败，请重试')
+								}
+							}
+						});
+					}
+				})
+			});
+
+			/**
+			 * 扫码控件
+			 */
+			document.getElementById('scanDevice').addEventListener('tap', function() {
+				//打开扫码页面
+				mui.openWindow({
+					url: './components/scan/scan.html',
+					id: 'scan',
+					extras: {
+						eventName: 'deviceIDScan'
+					}
+				});
+			});
+
+			//监听设备使用页面左上角设备扫描二维码监听
+			window.addEventListener('deviceIDScan', function(event) {
+				
+				document.getElementById("global_base_deviceId").value = event.detail.deviceID
+				//请求参数
+			}, {
+				passive: false
+			});
+
+
+			//遍历form表单，获取表单中的信息
+			$.fn.serializeObject = function() {
+				var o = {};
+				var a = this.serializeArray();
+				$.each(a, function() {
+					if (o[this.name]) {
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]];
+						}
+						o[this.name].push(this.value || '');
+					} else {
+						o[this.name] = this.value || '';
+					}
+				});
+				return o;
+			};
+		</script>
+		<script type="text/javascript">
+
+		</script>
+	</body>
+</html>

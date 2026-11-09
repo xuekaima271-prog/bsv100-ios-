@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>WEBRTC推流列表</title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/app.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view-cell {
+				height: 50px;
+			}
+			
+			.mui-btn-save {
+				margin-top: 20px;
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-table-view {
+				width: 99%;
+				margin: 0px 0.5% 0px 0.5%;
+			}
+
+			.mui-a-add {
+				float: right;
+				font-size: 30px;
+			}
+			
+			.mui-btn-div-inco{
+				width: 5%;
+				float: right;
+				margin-right: 10px;
+			}
+			.div-green{
+				height: 10px;
+				width: 10px;
+				border-radius: 5px;
+				background-color: limegreen;
+				display: inline-block;
+				margin-right: 5px;
+			}
+			.div-grey{
+				height: 10px;
+				width: 10px;
+				border-radius: 5px;
+				background-color: gray;
+				display: inline-block;
+				margin-right: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-arrowleft mui-pull-left" id="Stream_streams_save"></a>
+			<a class="mui-title">WEBRTC推流列表</a>
+			<!-- <a class="mui-icon mui-icon-plusempty mui-a-add" id="addStream"></a> -->
+		</header>
+		<div class="mui-content">
+			<ul id="Stream_streams_list" class="mui-table-view">
+			</ul>
+			<div class="addDiv">
+				<img src="img/newAdd.png" style="width: 60px;height: 60px;" id="addStream">
+			</div>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+				
+					//接受来自主页面的传值
+			    var self = plus.webview.currentWebview();
+			    var streams = self.streams;
+					
+					//初始化加载页面
+					reload(streams);
+					
+					//添加推流跳转页面
+					document.getElementById('addStream').addEventListener('tap',function(){
+						mui.openWindow({
+							url: 'addStream.html',
+							id:'addStream'
+						})
+					});
+					
+					//获得添加页面传过来的推流信息
+					window.addEventListener('saveStream',function(e){
+						let newStream = e.detail.data;
+						streams[streams.length] = JSON.parse(newStream);
+						plus.webview.close('addStream');
+						reload(streams);
+						// console.log(JSON.stringify(cameras))
+					});
+					
+					//获得编辑页面传过来的推流信息
+					window.addEventListener('editStream',function(e){
+						let newEditStream = e.detail.editData;
+						let editC = JSON.parse(newEditStream);
+						for (let i = 0; i < streams.length; i++) {
+							if(streams[i].id == editC.id){
+								streams[i] = editC;
+							}
+						}
+						// console.log(JSON.stringify(streams))
+						plus.webview.close('editStream');
+						reload(streams);
+					});
+					
+					//传值给主页面
+					document.getElementById('Stream_streams_save').addEventListener('tap',function(){
+						//页面传值给推流列表
+						//进行预加载
+						var prPage = mui.preload({url:'loadWebRtcClient.html',id:'loadWebRtcClient.html'});
+						//console.log(JSON.stringify(streams))
+						mui.fire(prPage,'stearmList',{datas:JSON.stringify(streams)});
+						mui.openWindow({
+							url:'loadWebRtcClient.html',
+							id:'loadWebRtcClient.html'
+						});
+					});
+					
+			});
+			
+			//初始化页面
+			function reload(streams){
+				let divtype;
+				//	删除ul内的所有节点,避免数据重复
+				$("#Stream_streams_list").html("");
+				
+				var $liNode = "";
+				for (var i = 0; i < streams.length; i++) {
+					if (streams[i].enable == true) {
+						divtype = 'div-green'
+					} else{
+						divtype = 'div-grey'
+					}
+					
+					//动态创建节点
+					$liNode +=
+					'<li class="mui-table-view-cell">' +
+            '<div class="mui-slider-right mui-disabled">' +
+              '<a class="mui-btn mui-btn-green" editData='+JSON.stringify(streams[i])+' id="editStream' + streams[i].id +'"> 编辑 </a>' +
+                '<a class="mui-btn mui-btn-red" deleteData='+ i +' id="deleteStream' + streams[i].id +'"> 删除 </a>' +
+                '</div>' +
+                '<div class="mui-slider-handle mui-table" showData='+JSON.stringify(streams[i])+' id="' + streams[i].id +'">' +
+                '<div class="mui-table-cell" style="width: 80%;"><div class="'+divtype+'"></div>推流编号：' + streams[i].id + '（' + streams[i].label + '）</div>' +
+                '<div class="mui-btn-div-inco" style="width: 20%;">' +
+                '<a class="mui-icon mui-icon-arrowright"></a>' +
+              '</div>' +
+            '</div>' +
+					'</li>';
+				}
+				
+				//添加至ul中
+				$("#Stream_streams_list").html($liNode);
+				
+				for (var i = 0; i < streams.length; i++) {
+					
+					//页面跳转至编辑页面
+					document.getElementById('editStream' + streams[i].id).addEventListener('tap', function() {
+						//console.log($(this).attr("editData"))
+						mui.openWindow({
+							url: 'editStream.html',
+							id : 'editStream',
+							extras:{
+								editStream:$(this).attr("editData")
+							}
+						});
+					});
+					
+					//删除推流
+					document.getElementById('deleteStream' + streams[i].id ).addEventListener('tap',function(){
+						let deleteD = $(this).attr("deleteData");
+						streams.splice(deleteD,1);
+						reload(streams);
+					});
+					
+					//页面跳转至展示页面
+					document.getElementById(streams[i].id).addEventListener('tap', function() {
+						// console.log($(this).attr("showData"))
+						mui.openWindow({
+							url: 'stream.html',
+							id : 'stream',
+							extras:{
+								stream:$(this).attr("showData")
+							}
+						})
+					});
+				};
+			};
+			
+		</script>
+	</body>
+</html>

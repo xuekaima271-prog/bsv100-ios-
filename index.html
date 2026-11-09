@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link href="css/app.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+		<style type="text/css">
+			.mui-btn-blue {
+				margin: 10px 2% 0px 2%;
+				background-color: white;
+				border-color: white;
+				width: 96%;
+			}
+			.mui-title {
+				font-weight: 30px;
+				font-size: 25px;
+			}
+			.mui-btn-font-size{
+				font-size: 15px;
+				text-align: left;
+			}
+			.mui-btn-div{
+				float: left;
+				margin-left: 1%;
+				width: 65%;
+				color: black;
+			}
+			.mui-btn-div-a{
+				float: left;
+				width: 10%;
+				text-align: center;
+			}
+			.mui-btn-div-inco{
+				width: 5%;
+				float: right;
+				margin-right: 20px;
+			}
+			.mui-content{
+				background-color: #F2F4F5;
+			}
+			body{
+				background-color: #F2F4F5;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<div class="mui-title">
+				<a>首页导航<a style="font-size: medium;">(V5.2)</a></a>
+			</div>
+		</header>
+		<div class="mui-content">
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="devicesInformation">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/devices.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							设备信息
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadGlobal">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/loadGlobal.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							全局配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadVstreamRecorder">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/NVR.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							NVR配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadHplocator">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/loadHplocator.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							高精度定位配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadWebRtcClient">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/loadPushStream.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							WEBRTC推流配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			<!-- <div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadBehavior">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/loadBehavior.png"  class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							驾驶员行为配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadWebRtcClient">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/loadPushStream.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							WEBRTC推流配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="voice">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/voice.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							语音配置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+      
+      <div class="mui-button-row">
+      	<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="canProxy">
+      		<div >
+      			<div class="mui-btn-div-a">
+      				<img src="img/canProxy.png" class="img-inco">
+      			</div>
+      			<div class="mui-btn-div">
+      				canProxy配置
+      			</div>
+      			<div class="mui-btn-div-inco">
+      				<a class="mui-icon mui-icon-arrowright"></a>
+      			</div>
+      		</div>
+      	</button>
+      </div>
+      
+      <div class="mui-button-row">
+      	<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="UVMonitor">
+      		<div >
+      			<div class="mui-btn-div-a">
+      				<img src="img/monitor.png" class="img-inco">
+      			</div>
+      			<div class="mui-btn-div">
+      				UVMonitor配置
+      			</div>
+      			<div class="mui-btn-div-inco">
+      				<a class="mui-icon mui-icon-arrowright"></a>
+      			</div>
+      		</div>
+      	</button>
+      </div>
+      
+      <div class="mui-button-row">
+      	<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="PushRtmpFFmpeg">
+      		<div >
+      			<div class="mui-btn-div-a">
+      				<img src="img/PushRtmpFFmpeg.png" class="img-inco">
+      			</div>
+      			<div class="mui-btn-div">
+      				Rtmp配置
+      			</div>
+      			<div class="mui-btn-div-inco">
+      				<a class="mui-icon mui-icon-arrowright"></a>
+      			</div>
+      		</div>
+      	</button>
+      </div> -->
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="VAITerminal">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/carinformation.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							终端信息
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadReset">
+					<div >
+						<div class="mui-btn-div-a">
+							<a class="mui-icon mui-icon-gear"></a>
+						</div>
+						<div class="mui-btn-div">
+							恢复出厂设置
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-block mui-btn-font-size" id="loadReBoot">
+					<div >
+						<div class="mui-btn-div-a">
+							<img src="img/loadReboot.png" class="img-inco">
+						</div>
+						<div class="mui-btn-div">
+							设备重启
+						</div>
+						<div class="mui-btn-div-inco">
+							<a class="mui-icon mui-icon-arrowright"></a>
+						</div>
+					</div>
+				</button>
+			</div>
+			<div id="my" style="height: 100vh;width: 100%;background-color: rgba(100,100,150,0.3);position: absolute;left: 0;top: 0;z-index: 9999;display: none;">
+				<img src="img/waiting.gif"  style="height: 50px;width: 50px;display:block; margin:40vh auto;">
+			</div>
+		</div>
+		
+	  <script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var baseConfigIp = configIp;
+			var baseConfigPort = configPort;
+			
+			//设备信息页面跳转
+				document.getElementById('devicesInformation').addEventListener('tap', function() {
+					plus.nativeUI.showWaiting();
+					mui.ajax({
+						url: baseConfigIp + baseConfigPort + 'loadGlobal.cgi',
+						type: 'get',
+						dataType: 'json',
+						timeout: 10000,
+						success: function(data) {
+							if (data) {
+								mui.openWindow({
+									url: 'loadDevices.html'
+								});
+							}
+						},
+						error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+			　　　　if(type =='timeout'){//超时,status还有success,error等值的情况
+			　　　　　	mui.alert("请求超时");
+			　　　　}else {
+								mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+							}
+						},
+						complete: function() {
+								plus.nativeUI.closeWaiting(); 
+						}
+					});
+				}) 
+			//全局配置页面跳转
+			document.getElementById('loadGlobal').addEventListener('tap', function() {
+				plus.nativeUI.showWaiting();
+				mui.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadGlobal.cgi',
+					type: 'get',
+					dataType: 'json',
+					timeout: 10000,
+					success: function(data) {
+						if (data) {
+							mui.openWindow({
+								url: 'loadGlobal.html'
+							});
+						}
+					},
+					error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+		　　　　if(type =='timeout'){//超时,status还有success,error等值的情况
+		　　　　　	mui.alert("请求超时");
+		　　　　}else {
+							mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+						}
+					},
+					complete: function() {
+							plus.nativeUI.closeWaiting(); 
+					}
+				});
+		// mui.openWindow({
+		// 	url: 'loadGlobal.html'
+		// });
+			}) 
+			
+			//NVR页面跳转
+			document.getElementById('loadVstreamRecorder').addEventListener('tap', function() {
+				plus.nativeUI.showWaiting();
+				mui.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadVStreamRecorder.cgi',
+					type: 'get',
+					dataType: 'json',
+					timeout: 10000,
+					success: function(data) {
+						if (data) {
+							mui.openWindow({
+								url: 'loadVstreamRecorder.html'
+							});
+						}
+					},
+					error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+		　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+		　　　　　	mui.alert("请求超时");
+		　　　　}else {
+							mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+						}
+					},
+					complete: function() {
+							plus.nativeUI.closeWaiting(); 
+					}
+				});
+			}) 
+			
+			//高精度定位页面跳转
+			document.getElementById('loadHplocator').addEventListener('tap', function() {
+				plus.nativeUI.showWaiting();
+				mui.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadHplocator.cgi',
+					type: 'get',
+					dataType: 'json',
+					timeout: 10000,
+					success: function(data) {
+						if (data) {
+							mui.openWindow({
+								url: 'loadHplocator.html'
+							});
+						}
+					},
+					error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+		　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+		　　　　　	mui.alert("请求超时");
+		　　　　}else {
+							mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+						}
+					},
+					complete: function() {
+							plus.nativeUI.closeWaiting(); 
+					}
+				});
+			}) 
+			
+			//驾驶员行为识别页面跳转
+		// 	document.getElementById('loadBehavior').addEventListener('tap', function() {
+		// 		plus.nativeUI.showWaiting();
+		// 		mui.ajax({
+		// 			url: baseConfigIp + baseConfigPort + 'loadBehavior.cgi',
+		// 			type: 'get',
+		// 			dataType: 'json',
+		// 			timeout: 10000,
+		// 			success: function(data) {
+		// 				if (data) {
+		// 					mui.openWindow({
+		// 						url: 'loadBehavior.html'
+		// 					});
+		// 				}
+		// 			},
+		// 			error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+		// 　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+		// 　　　　　	mui.alert("请求超时");
+		// 　　　　}else {
+		// 					mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+		// 				}
+		// 			},
+		// 			complete: function() {
+		// 					plus.nativeUI.closeWaiting(); 
+		// 			}
+		// 		});
+		// 	}) 
+			
+			    //webrtc推流配置页面跳转
+				document.getElementById('loadWebRtcClient').addEventListener('tap', function() {
+					plus.nativeUI.showWaiting();
+					mui.ajax({
+						url: baseConfigIp + baseConfigPort + 'loadWebRtcClient.cgi',
+						type: 'get',
+						dataType: 'json',
+						timeout: 10000,
+						success: function(data) {
+							if (data) {
+								mui.openWindow({
+									url: 'loadWebRtcClient.html',
+								});
+							}
+						},
+						error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+			　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+			　　　　　	mui.alert("请求超时");
+			　　　　}else {
+								mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+							}
+						},
+						complete: function() {
+								plus.nativeUI.closeWaiting(); 
+						}
+					});
+				})
+				
+				//VAITerminal配置页面跳转
+				document.getElementById('VAITerminal').addEventListener('tap', function() {
+					plus.nativeUI.showWaiting();
+					mui.ajax({
+						url: baseConfigIp + baseConfigPort + 'loadVAITerminal_JT.cgi',
+						type: 'get',
+						dataType: 'json',
+						timeout: 10000,
+						success: function(data) {
+							if (data) {
+								mui.openWindow({
+									url: './VAITerminal/index.html',
+								});
+							}
+						},
+						error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+			　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+			　　　　　	mui.alert("请求超时");
+			　　　　}else {
+								mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+							}
+						},
+						complete: function() {
+								plus.nativeUI.closeWaiting(); 
+						}
+					});
+				})
+					
+			//语音配置页面跳转
+    //   document.getElementById('voice').addEventListener('tap', function() {
+    //     plus.nativeUI.showWaiting();
+    //     mui.ajax({
+    //       url: baseConfigIp + baseConfigPort + 'loadVoiceService.cgi',
+    //       type: 'get',
+    //       dataType: 'json',
+    //       timeout: 10000,
+    //       success: function(data) {
+    //         if (data) {
+    //           mui.openWindow({
+    //             url: 'loadVoiceService.html'
+    //           });
+    //         }
+    //       },
+    //       error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+    // 　　　　if(type =='timeout'){//超时,status还有success,error等值的情况
+    // 　　　　　	mui.alert("请求超时");
+    // 　　　　}else {
+    //           mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+    //         }
+    //       },
+    //       complete: function() {
+    //           plus.nativeUI.closeWaiting(); 
+    //       }
+    //     });
+    //   })
+      
+      //canProxy配置页面跳转
+      //   document.getElementById('canProxy').addEventListener('tap', function() {
+      //     plus.nativeUI.showWaiting();
+      //     mui.ajax({
+      //       url: baseConfigIp + baseConfigPort + 'loadCanProxy.cgi',
+      //       type: 'get',
+      //       dataType: 'json',
+      //       timeout: 10000,
+      //       success: function(data) {
+      //         if (data) {
+      //           mui.openWindow({
+      //             url: 'loadCanProxy.html',
+      //           });
+      //         }
+      //       },
+      //       error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+      // 　　　　if(type =='timeout'){//超时,status还有success,error等值的情况
+      // 　　　　　	mui.alert("请求超时");
+      // 　　　　}else {
+      //           mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+      //         }
+      //       },
+      //       complete: function() {
+      //           plus.nativeUI.closeWaiting(); 
+      //       }
+      //     });
+      //   }) 
+			
+      //UVMonitor配置页面跳转
+      //   document.getElementById('UVMonitor').addEventListener('tap', function() {
+      //     plus.nativeUI.showWaiting();
+      //     mui.ajax({
+      //       url: baseConfigIp + baseConfigPort + 'loadCanProxy.cgi',
+      //       type: 'get',
+      //       dataType: 'json',
+      //       timeout: 10000,
+      //       success: function(data) {
+      //         if (data) {
+      //           mui.openWindow({
+      //             url: './UVMonitor/loadUVMonitor.html',
+      //           });
+      //         }
+      //       },
+      //       error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+      // 　　　　if(type =='timeout'){//超时,status还有success,error等值的情况
+      // 　　　　　	mui.alert("请求超时");
+      // 　　　　}else {
+      //           mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+      //         }
+      //       },
+      //       complete: function() {
+      //           plus.nativeUI.closeWaiting(); 
+      //       }
+      //     });
+      //   }) 
+        
+        //PushRtmpFFmpeg配置页面跳转
+        //   document.getElementById('PushRtmpFFmpeg').addEventListener('tap', function() {
+        //     plus.nativeUI.showWaiting();
+        //     mui.ajax({
+        //       url: baseConfigIp + baseConfigPort + 'loadPushRtmpFFmpeg.cgi',
+        //       type: 'get',
+        //       dataType: 'json',
+        //       timeout: 10000,
+        //       success: function(data) {
+        //         if (data) {
+        //           mui.openWindow({
+        //             url: 'loadPushRtmpFFmpeg.html'
+        //           });
+        //         }
+        //       },
+        //       error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+        // 　　　　if(type =='timeout'){//超时,status还有success,error等值的情况
+        // 　　　　　	mui.alert("请求超时");
+        // 　　　　}else {
+        //           mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+        //         }
+        //       },
+        //       complete: function() {
+        //           plus.nativeUI.closeWaiting(); 
+        //       }
+        //     });
+        //   }) 
+        
+			//重启设备，点击重启设备
+			document.getElementById('loadReBoot').addEventListener('tap', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认重启，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						$('#my').show();
+						// return
+						mui.ajax({
+							url: baseConfigIp + baseConfigPort + 'reboot.cgi',
+							type: 'post',
+							timeout: 10000 ,
+							success: function(data) {
+								setTimeout(function(){
+									if(JSON.parse(data).resultCode == 0){
+										mui.alert('重启成功')
+									}else{
+										mui.alert('重启失败')
+									}
+									$('#my').hide();
+								},20000)
+							},
+							error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+				　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+				　　　　　	mui.alert("请求超时");
+				　　　　}else {
+									mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+								}
+								$('#my').hide();
+							}
+						})
+					}
+				})
+			})
+			
+						
+			//恢复出厂设置
+			document.getElementById('loadReset').addEventListener('tap',function(){
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认恢复出厂设置，确认？', '提示', btnArray, function(e){
+					if (e.index == 1) {
+						mui.ajax({
+									url: baseConfigIp + baseConfigPort + 'loadVAITerminal_JT.cgi',
+									type: 'get',
+									dataType: 'json',
+									success: function(data) {
+										var configData = data.config;
+										for (var baseIndex in configData) {
+											if(baseIndex == "jt808"){
+												if(configData[baseIndex].authentication==''){
+													$('#my').show();
+															mui.ajax({
+																url: baseConfigIp + baseConfigPort + 'resetFactory.cgi',
+																type: 'post',
+																timeout: 10000,
+																success: function(data) {
+																	setTimeout(function(){
+																		if(JSON.parse(data).resultCode == 0){
+																			mui.alert('恢复出厂设置成功')
+																		}else{
+																			mui.alert('恢复出厂设置失败')
+																		}
+																		$('#my').hide();
+																	},20000)
+																},
+																error : function(xhr,type,errorThrown){ //请求完成后最终执行参数
+													　　　　if(type == 'timeout'){//超时,status还有success,error等值的情况
+													　　　　　	mui.alert("请求超时");
+													　　　　}else {
+																		mui.alert('请求失败：' + type + '\n err:' + errorThrown);
+																	}
+																	$('#my').hide();
+																}
+															})
+												}else{
+														mui.alert("请先注销当前终端设备");
+												}
+											}
+											
+										}
+										
+									},
+								})
+					}
+				})
+			})
+		</script>
+	</body>
+</html>

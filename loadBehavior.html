@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0px 0px 0.5%;
+			} */
+
+			.mui-button-div {
+				height: 40px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 15px;
+			}
+
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+			.mui-switch{
+				width: 85px
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">驾驶员行为配置</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadBehavior_server_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">接收数据服务器</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>服务器IP</label>
+							<input type="text"  id="loadBehavior_server_host" name="host" />
+						</div>
+						<div class="mui-input-row">
+							<label>服务器端口</label>
+							<input type="text"  id="loadBehavior_server_port" name="port" />
+						</div>
+						<!-- <div class="mui-input-row mui-right">
+							<label>通信协议</label> -->
+							<!-- <select style="width: 50%;" name="mode" id="loadBehavior_server_mode" readonly="readonly"> -->
+							<!-- <option value="1">udp</option> -->
+							<!-- <option value="2">tcp短链接</option> -->
+							<!-- <option value="3">tcp长链接</option> -->
+							<!-- </select> -->
+						<!-- </div> -->
+					</li>
+				</ul>
+			</form>
+
+			<form class="mui-input-group" id="loadBehavior_video_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">摄像机</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width: 50%;">视频流</label>
+							<select style="width: 50%;" name="type" id="loadBehavior_video_type">
+								<!-- <option value="0">UVC</option>
+								<option value="1">IPC</option> -->
+                <option value="0">摄像头</option>
+                <option value="1">RTSP推流</option>
+							</select>
+						</div>
+						<div id="loadBehavior_video_type_IPC">
+							<div class="mui-input-row" style="height: 60px;">
+								<label style="width: 40%;margin-top: 12px;">摄像头/rtsp</label>
+                <textarea type="text" id="loadBehavior_video_dev" name="dev" style="height: 80px;width: 60%;"></textarea>
+								<!-- <input style="width: 70%;" type="text"  id="loadBehavior_video_dev" name="dev" /> -->
+							</div>
+						</div>
+						<div id="loadBehavior_video_type_UVC">
+							<div class="mui-input-row">
+								<label style="width: 50%;">图像格式</label>
+								<select style="width: 50%;" name="fmt" id="loadBehavior_video_fmt">
+									<option value="0">yuyv</option>
+									<option value="1">mjpeg</option>
+								</select>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 50%;">图像宽度</label>
+							<input style="width: 50%;" type="text"  id="loadBehavior_video_width" name="width" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 50%;">图像高度</label>
+							<input style="width: 50%;" type="text"  id="loadBehavior_video_height" name="height" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 50%;">图像间隔（毫秒）</label>
+							<input style="width: 50%;" type="text"  id="loadBehavior_video_interval"
+								name="interval" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 50%;">视频长度（秒）</label>
+							<input style="width: 50%;" type="text"  id="loadBehavior_video_videoDuration"
+								name="videoDuration" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 50%;">本地保存违章图片</label>
+							<div class="mui-switch" name="savePic" id="loadBehavior_video_savePic">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 50%;">本地保存违章视频</label>
+							<div class="mui-switch" name="saveVideo" id="loadBehavior_video_saveVideo">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<!-- <div class="mui-input-row">
+							<label style="width: 50%;">本地保存违章视频</label>
+							<div class="mui-switch" id="loadBehavior_video_saveVideo" name="saveVideo">
+								<input type="hidden"  name="saveVideo" id="loadBehavior_video_saveVideo_in">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div> -->
+					</li>
+				</ul>
+			</form>
+			
+			<form class="mui-input-group" id="loadBehavior_form_closeEye">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">驾驶员行为(闭眼)</li>
+					<li class="mui-table-view-cell">
+						
+						<div class="mui-input-row">
+							<label>检测时间(秒)</label>
+							<input type="text"  id="loadBehavior_closeEye_duration" name="duration" />
+						</div>
+						<div class="mui-input-row">
+							<label>频率(次)</label>
+							<input type="text"  id="loadBehavior_closeEye_frequency" name="frequency" />
+						</div>
+						<!-- <div class="mui-input-row">
+							<label>喝水(秒)</label>
+							<input type="text"  id="loadBehavior_server_drink" name="drink" />
+						</div>
+						<div class="mui-input-row">
+							<label>抽烟(秒)</label>
+							<input type="text"  id="loadBehavior_server_smoke" name="smoke" />
+						</div>
+						<div class="mui-input-row">
+							<label>打电话(秒)</label>
+							<input type="text"  id="loadBehavior_server_phone" name="phone" />
+						</div>
+						
+						<div class="mui-input-row">
+							<label>打呵欠(秒)</label>
+							<input type="text"  id="loadBehavior_server_yawn" name="yawn" />
+						</div>
+						<div class="mui-input-row">
+							<label>左顾右盼(秒)</label>
+							<input type="text"  id="loadBehavior_server_lookrightleft" name="lookrightleft" />
+						</div>						
+						<div class="mui-input-row">
+							<label>遮挡摄像头(秒)</label>
+							<input type="text"  id="loadBehavior_server_blockCamera" name="blockCamera" />
+						</div>
+						<div class="mui-input-row">
+							<label>其他行为(秒)</label>
+							<input type="text"  id="loadBehavior_server_other" name="other" />
+						</div> -->
+					</li>
+				</ul>
+			</form>
+			
+			<form class="mui-input-group" id="loadBehavior_form_lookLeftRight">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">驾驶员行为(左顾右盼)</li>
+					<li class="mui-table-view-cell">					
+						<div class="mui-input-row">
+							<label>检测时间(秒)</label>
+							<input type="text"  id="loadBehavior_lookLeftRight_duration" name="duration" />
+						</div>
+						<div class="mui-input-row">
+							<label>频率(次)</label>
+							<input type="text"  id="loadBehavior_lookLeftRight_frequency" name="frequency" />
+						</div>
+						<div class="mui-input-row">
+							<label>偏转角度(度)</label>
+							<input type="text"  id="loadBehavior_lookLeftRight_yawAngle" name="yawAngle" />
+						</div>
+					</li>
+				</ul>
+			</form>
+			
+			<form class="mui-input-group" id="loadBehavior_form_lookStraight">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">驾驶员行为(直视)</li>
+					<li class="mui-table-view-cell">					
+						<div class="mui-input-row">
+							<label>检测时间(秒)</label>
+							<input type="text"  id="loadBehavior_lookStraight_duration" name="duration" />
+						</div>
+						<div class="mui-input-row">
+							<label>偏转角度(度)</label>
+							<input type="text"  id="loadBehavior_lookStraight_yawAngle" name="yawAngle" />
+						</div>
+						<div class="mui-input-row">
+							<label>俯仰角度(度)</label>
+							<input type="text"  id="loadBehavior_lookStraight_pitchAngle" name="pitchAngle" />
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<div class="mui-button-row mui-button-div">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row mui-button-bottom">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+
+	
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			
+			//请求的URL地址
+			var baseConfigIp = configIp;
+			
+			//请求的端口号
+			var baseConfigPort = configPort;
+			
+			//发送ajax请求获取驾驶员行为配置信息
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadBehavior.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let behaviorData = data.config;
+				  console.log(JSON.stringify(data))
+					for (let baseIndex in behaviorData) {
+						if (baseIndex == "server") {
+							// 服务器信息
+							let serverData = behaviorData[baseIndex];
+              // console.log(JSON.stringify(serverData))
+							for (let serverIndex in serverData) {
+								if ($('#loadBehavior_server_' + serverIndex).length > 0 ) {
+									document.getElementById("loadBehavior_server_" + serverIndex).value = serverData[
+										serverIndex];
+								}
+                $('#loadBehavior_server_mode').attr("disabled",true); 
+							}
+						} else if (baseIndex == "video") {
+							// 摄像机录像信息
+							let videoData = behaviorData[baseIndex];
+							// console.log(JSON.stringify(videoData))
+							let loadBehaviorVideoSavePic = document.getElementById("loadBehavior_video_savePic");
+							let loadBehaviorVideoSaveVideo = document.getElementById("loadBehavior_video_saveVideo");
+							if (videoData.savePic == 1) {
+								loadBehaviorVideoSavePic.classList.add('mui-active');
+							}
+							if (videoData.saveVideo == 1) {
+								loadBehaviorVideoSaveVideo.classList.add('mui-active');
+							}
+							for (let videoIndex in videoData) {
+								if ($('#loadBehavior_video_' + videoIndex).length > 0 ) {
+									document.getElementById("loadBehavior_video_" + videoIndex).value = videoData[videoIndex];
+									if (videoIndex = 'type') {
+										if (videoData[videoIndex] == '0') {
+											document.getElementById('loadBehavior_video_type_IPC').style.display = 'none';
+											document.getElementById('loadBehavior_video_type_UVC').style.display = '';
+										} else if (videoData[videoIndex] == '1') {
+											document.getElementById('loadBehavior_video_type_UVC').style.display = 'none';
+											document.getElementById('loadBehavior_video_type_IPC').style.display = '';
+										}
+									}
+								}
+							}	
+						} else if(baseIndex == "behavior"){
+							let behData = behaviorData[baseIndex];
+							for (let behIndex in behData) {
+								if (behIndex == "closeEye") {
+									let closeEyeData = behData[behIndex]
+									for (let closeEyeIndex in closeEyeData) {
+										document.getElementById("loadBehavior_closeEye_" + closeEyeIndex).value = closeEyeData[closeEyeIndex];
+									}
+								} else if (behIndex == "lookLeftRight") {
+									let lookLeftRightData = behData[behIndex]
+									for (let lookLeftRightIndex in lookLeftRightData) {
+										document.getElementById("loadBehavior_lookLeftRight_" + lookLeftRightIndex).value = lookLeftRightData[lookLeftRightIndex];
+									}
+								} else if (behIndex == "lookStraight") {
+									let lookStraightData = behData[behIndex]
+									for (let lookStraightIndex in lookStraightData) {
+										document.getElementById("loadBehavior_lookStraight_" + lookStraightIndex).value = lookStraightData[lookStraightIndex];
+									}
+								}
+							}
+						} 
+					}
+				}
+			});
+			
+			//点击保存驾驶员对应配置信息
+			document.getElementById('saveBtn').addEventListener('tap', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+            // 取消通信协议的仅读属性
+            $('#loadBehavior_server_mode').attr("disabled",false); 
+						//获取服务器对应信息
+						var loadBehavior_server = $('#loadBehavior_server_form').serializeObject();
+						
+						//获取录像信息
+						var loadBehavior_video = $('#loadBehavior_video_form').serializeObject();
+						var loadBehaviorVideoSavePic = document.getElementById("loadBehavior_video_savePic").classList.contains("mui-active");
+						var loadBehaviorVideoSaveVideo = document.getElementById("loadBehavior_video_saveVideo").classList.contains("mui-active");
+						
+						//获取驾驶行为信息
+						var loadBehaviorCloseEye = $('#loadBehavior_form_closeEye').serializeObject();
+						var loadBehaviorLookLeftRight = $('#loadBehavior_form_lookLeftRight').serializeObject();
+						var loadBehaviorLookStraight = $('#loadBehavior_form_lookStraight').serializeObject();
+						
+						//服务器模式（转化为整型）
+						// loadBehavior_server.mode = Number(loadBehavior_server.mode);
+						
+						//服务器端口（转化为整型）
+						loadBehavior_server.port = Number(loadBehavior_server.port);
+						
+						//视频格式（转化为整型）
+						loadBehavior_video.fmt = Number(loadBehavior_video.fmt);
+						
+						//图像高度（转化为整型）
+						loadBehavior_video.height = Number(loadBehavior_video.height);
+						
+						//图像采集间隔（转化为整型）
+						loadBehavior_video.interval = Number(loadBehavior_video.interval);
+						//图像采集间隔（转化为整型）
+						loadBehavior_video.videoDuration = Number(loadBehavior_video.videoDuration);
+						
+						//驾驶员行为(闭眼)（转化为整型）
+						loadBehaviorCloseEye.duration = Number(loadBehaviorCloseEye.duration);
+						loadBehaviorCloseEye.frequency = Number(loadBehaviorCloseEye.frequency);
+						
+						//驾驶员行为(左顾右盼)（转化为整型）
+						loadBehaviorLookLeftRight.duration = Number(loadBehaviorLookLeftRight.duration);
+						loadBehaviorLookLeftRight.frequency = Number(loadBehaviorLookLeftRight.frequency);
+						loadBehaviorLookLeftRight.yawAngle = Number(loadBehaviorLookLeftRight.yawAngle);
+						
+						//驾驶员行为(直视)（转化为整型）
+						loadBehaviorLookStraight.duration = Number(loadBehaviorLookStraight.duration);
+						loadBehaviorLookStraight.yawAngle = Number(loadBehaviorLookStraight.yawAngle);
+						loadBehaviorLookStraight.pitchAngle = Number(loadBehaviorLookStraight.pitchAngle);
+					
+
+						//是否保存违章图片
+						if (loadBehaviorVideoSavePic) {
+							loadBehavior_video.savePic = 1;
+						}else{
+							loadBehavior_video.savePic = 0;
+						};
+						
+						//是否保存违章视频
+						if (loadBehaviorVideoSaveVideo) {
+							loadBehavior_video.saveVideo = 1;
+						}else{
+							loadBehavior_video.saveVideo = 0;
+						};
+						//摄像头类型（转化为整型）
+						loadBehavior_video.type = Number(loadBehavior_video.type);
+						
+						//图像宽度（转化为整型）
+						loadBehavior_video.width = Number(loadBehavior_video.width);
+						
+						//将获取的数据信息包装成对象
+						var allData = {
+							video: loadBehavior_video,
+							server: loadBehavior_server,
+							behavior: {
+								closeEye: loadBehaviorCloseEye,
+								lookLeftRight: loadBehaviorLookLeftRight,
+								lookStraight:	loadBehaviorLookStraight
+							}
+						}
+						var config = {
+							config: JSON.stringify(allData)
+						}
+						
+						//将数据组装成服务器接受formdata格式
+						var formdata = new FormData();
+						for (let index in config) {
+							formdata.append(index, config[index])
+						}
+						
+						//发送请求给服务器保存更新后的配置数据
+						$.ajax({
+							url: baseConfigIp + baseConfigPort + 'saveBehavior.cgi',
+							data: formdata,
+							type: 'post',
+							processData: false,
+							contentType: false,
+							success: function(data) {
+								if(data.resultCode == 0){
+									mui.alert('保存成功')
+								}else{
+									mui.alert('保存失败，请重试')
+								}
+							}
+						});
+					}
+				})
+			});
+			
+			//点击改变摄像机类型
+			document.getElementById('loadBehavior_video_type').addEventListener('change',function(){
+				var typeValue = document.getElementById('loadBehavior_video_type').value;
+				if (typeValue == '0') {
+					document.getElementById('loadBehavior_video_type_IPC').style.display = 'none';
+					document.getElementById('loadBehavior_video_type_UVC').style.display = '';
+				} else if (typeValue == '1') {
+					document.getElementById('loadBehavior_video_type_UVC').style.display = 'none';
+					document.getElementById('loadBehavior_video_type_IPC').style.display = '';
+				}
+			});
+			
+			//遍历form表单，获取表单中的信息
+			$.fn.serializeObject = function() {
+				var o = {};
+				var a = this.serializeArray();
+				$.each(a, function() {
+					if (o[this.name]) {
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]];
+						}
+						o[this.name].push(this.value || '');
+					} else {
+						o[this.name] = this.value || '';
+					}
+				});
+				return o;
+			};
+		</script>
+		<script type="text/javascript">
+			
+		</script>
+	</body>
+</html>

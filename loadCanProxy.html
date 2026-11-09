@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-button-div {
+				height: 40px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 15px;
+			}
+
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">canProxy配置</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadCanProxy_mqtt_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">mqtt推送配置</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>服务器地址</label>
+							<input type="text"  id="loadCanProxy_mqtt_mqttHost" name="mqttHost" />
+						</div>
+						<div class="mui-input-row">
+							<label>服务器端口</label>
+							<input type="text"  id="loadCanProxy_mqtt_mqttPort" name="mqttPort" />
+						</div>
+            <div class="mui-input-row">
+            	<label>用户名</label>
+            	<input type="text"  id="loadCanProxy_mqtt_userName" name="userName" />
+            </div>
+            <div class="mui-input-row">
+            	<label>密码</label>
+            	<input type="text"  id="loadCanProxy_mqtt_password" name="password" />
+            </div>
+					</li>
+				</ul>
+			</form>
+      
+      <form class="mui-input-group" id="loadCanProxy_form">
+      	<ul class="mui-table-view mui-input-group">
+      		<li class="mui-table-view-cell mui-table-view-cell-title">canProxy配置</li>
+      		<li class="mui-table-view-cell">
+      			<div class="mui-input-row">
+      				<label>设备名</label>
+      				<input type="text"  id="loadCanProxy_form_canName" name="canName" />
+      			</div>
+      			<div class="mui-input-row">
+      				<label>can波特率</label>
+      				<input type="text"  id="loadCanProxy_form_bitrate" name="bitrate" />
+      			</div>
+            <div class="mui-input-row">
+            	<label>位置信息获取主题</label>
+            	<input type="text"  id="loadCanProxy_form_locationTopic" name="locationTopic" />
+            </div>
+            <div class="mui-input-row">
+            	<label>推送can信息主题</label>
+            	<input type="text"  id="loadCanProxy_form_reportTopic" name="reportTopic" />
+            </div>
+            <div class="mui-input-row">
+            	<label>上报频率(秒)</label>
+            	<input type="text"  id="loadCanProxy_form_reportTime" name="reportTime" />
+            </div>
+            <div class="mui-input-row">
+            	<label>白名单启用状态</label>
+            	<div class="mui-switch" id="loadCanProxy_form_filterEnable" name="filterEnable">
+            		<input type="hidden" id="loadCanProxy_form_filterEnable_in" name="filterEnable">
+            		<div class="mui-switch-handle"></div>
+            	</div>
+            </div>
+      		</li>
+      	</ul>
+      </form>
+      
+      <form class="mui-input-group" id="loadCanProxy_canIDList">
+      	<ul class="mui-table-view mui-input-group">
+      		<li class="mui-table-view-cell mui-table-view-cell-title">canID白名单列表</li>
+      		<li class="mui-table-view-cell">
+      			<a class="mui-navigate-right" id="canIDList">查看列表</a>
+      		</li>
+      	</ul>
+      </form>
+      
+			<div class="mui-button-row mui-button-div">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row mui-button-bottom">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+		
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+				
+				//请求数据的URL地址
+				var baseConfigIp = configIp;
+				
+				//请求数据的端口号
+				var baseConfigPort = configPort;
+				
+        var saveCanIdList = []
+				//发送请求获取基础配置
+				$.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadCanProxy.cgi',
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						let configData = data.config;
+            for (let index in configData) {
+              if (index == "mqtt") {
+                var mqttData = configData[index]
+                for (let indexMqtt in mqttData) {
+                  document.getElementById("loadCanProxy_mqtt_" + indexMqtt).value = mqttData[indexMqtt]
+                }
+              } else if (index != "canIDList") {
+                // console.log(JSON.stringify(configData[index]))
+                document.getElementById("loadCanProxy_form_" + index).value = configData[index]
+              } else {
+                canIDList = configData[index]
+                saveCanIdList = canIDList
+              }
+            }
+            // filterEnable赋值
+            if (data.config.filterEnable == "true" || data.config.filterEnable == true) {
+            	mui("#loadCanProxy_form_filterEnable").switch().toggle();
+            	$('#loadCanProxy_form_filterEnable_in').val(true);								 
+            } else {
+            	$('#loadCanProxy_form_filterEnable_in').val(false);
+            }
+					}
+				});
+        
+        //点击filterEnable
+        document.getElementById('loadCanProxy_form_filterEnable').addEventListener('tap', function() {
+        	let stateVal = $('#loadCanProxy_form_filterEnable_in').val();
+        	if (stateVal == "true" || stateVal == true) {
+        		$('#loadCanProxy_form_filterEnable_in').val(false);
+        	} else {
+        		$('#loadCanProxy_form_filterEnable_in').val(true);
+        	}
+        });
+        
+        //跳转canIDList列表
+        document.getElementById('canIDList').addEventListener('tap', function() {
+        	mui.openWindow({
+        		url: 'canIDList.html',
+        		id: 'canIDList.html',
+        		extras:{
+        			canIDList:canIDList
+        		}
+        	});
+        });
+        
+        //获得添加页面传过来的摄像头信息
+        window.addEventListener('saveList',function(e){
+        	let stearmL = e.detail.datas;
+        	saveCanIdList = JSON.parse(stearmL);
+           console.log(JSON.stringify(saveCanIdList))
+        });
+				
+				//点击保存按钮，向服务器发送请求，储存信息
+				document.getElementById('saveBtn').addEventListener('tap', function() {
+					var btnArray = ['否', '是'];
+					mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+						if (e.index == 1) {
+							//获取表单数据
+							var loadCanProxy_mqtt = $('#loadCanProxy_mqtt_form').serializeObject();
+							var loadCanProxy = $('#loadCanProxy_form').serializeObject();
+              loadCanProxy_mqtt.mqttPort = Number(loadCanProxy_mqtt.mqttPort)
+							loadCanProxy.bitrate = Number(loadCanProxy.bitrate);
+							loadCanProxy.reportTime = Number(loadCanProxy.reportTime)
+              if(loadCanProxy.filterEnable == 'true'){
+              	loadCanProxy.filterEnable = true
+              }else{
+              	loadCanProxy.filterEnable = false
+              }
+							//组装城服务器需要的数据格式
+							var allData = {
+								mqtt: loadCanProxy_mqtt,
+                bitrate: loadCanProxy.bitrate,
+                canName: loadCanProxy.canName,
+                filterEnable: loadCanProxy.filterEnable,
+                locationTopic: loadCanProxy.locationTopic,
+                reportTime: loadCanProxy.reportTime,
+                reportTopic: loadCanProxy.reportTopic,
+                canIDList: saveCanIdList
+							}
+							var config = {
+								config: JSON.stringify(allData)
+							}						
+							var formdata = new FormData();
+							for (let index in config) {
+								formdata.append(index, config[index])
+							}
+							//向服务器发送请求，存储更新后的数据
+							$.ajax({
+								url: baseConfigIp + baseConfigPort + 'saveCanProxy.cgi',
+								data: formdata,
+								type: 'post',
+								processData: false,
+								contentType: false,
+								success: function(data) {
+									if(data.resultCode == 0){
+										mui.alert('保存成功')
+									}else{
+									mui.alert('保存失败，请重试')
+								}
+								}
+							});
+						}
+					})
+				});
+				
+				//遍历form表单，获取表单中的数据
+				$.fn.serializeObject = function() {
+					var o = {};
+					var a = this.serializeArray();
+					$.each(a, function() {
+						if (o[this.name]) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};
+				
+			});
+			
+			
+		</script>
+		<script type="text/javascript">
+		</script>
+	</body>
+</html>

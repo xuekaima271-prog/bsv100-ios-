@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-button-div {
+				height: 50px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 10px;
+			}
+
+			.mui-btn-save {
+				margin-top: 15px;
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+			
+			.mui-switch{
+				width: 85px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<h1 class="mui-title">编辑通知列表信息</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadUVMonitor_notifyList_form">
+			  <ul class="mui-table-view mui-input-group">
+			    <li class="mui-table-view-cell">
+			      <div class="mui-input-row">
+			        <label>软件编码</label>
+			        <input type="text" name="softType" id="loadUVMonitor_mountList_softType"  readonly="readonly"/>
+			      </div>
+			      <div class="mui-input-row">
+			        <label>软件名称</label>
+			        <input type="text" name="name" id="loadUVMonitor_mountList_name" readonly="readonly"/>
+			      </div>
+            <div class="mui-input-row">
+              <label>是否通知</label>
+              <div class="mui-switch" id="loadUVMonitor_mountList_enable" name="enable">
+                <input type="hidden" id="loadUVMonitor_mountList_enable_in" name="enable">
+                <div class="mui-switch-handle"></div>
+              </div>
+            </div>
+			      <div class="mui-input-row">
+			        <label>处理时间限制</label>
+			        <input type="text" name="overTime" id="loadUVMonitor_mountList_overTime" />
+			      </div>
+			    </li>
+			  </ul>
+			</form>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">确认修改</button>
+			</div>
+		</div>
+    <script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+				//服务器请求的URL地址
+				var baseConfigIp = configIp;
+				
+				//服务器请求的端口号
+				var baseConfigPort = configPort;
+					
+        //接收摄像头列表传来的数据
+        var self = plus.webview.currentWebview();
+        var editListData = self.editListData;
+        var list = JSON.parse(editListData);
+        console.log(JSON.stringify(list))
+        //摄像机类型回显
+        for (let index in list) {
+           document.getElementById('loadUVMonitor_mountList_' + index).value = list[index]
+        }
+        if (list.enable== "true" || list.enable == true) {
+        	mui("#loadUVMonitor_mountList_enable").switch().toggle();
+        	$('#loadUVMonitor_mountList_enable_in').val(true);								 
+        } else {
+        	$('#loadUVMonitor_mountList_enable_in').val(false);
+        }
+        //点击保存状态信息
+        document.getElementById('loadUVMonitor_mountList_enable').addEventListener('tap', function() {
+        	let stateVal = $('#loadUVMonitor_mountList_enable_in').val();
+          console.log(JSON.stringify(stateVal))
+        	if (stateVal == "true" || stateVal == true) {
+        		$('#loadUVMonitor_mountList_enable_in').val(false);
+        	} else {
+        		$('#loadUVMonitor_mountList_enable_in').val(true);
+        	}
+        });
+        //获取表单数据
+        document.getElementById('saveBtn').addEventListener('tap',function(){
+          //获取表单数据
+          let editData = $('#loadUVMonitor_notifyList_form').serializeObject();
+           editData.overTime = Number(editData.overTime);
+           editData.softType = Number(editData.softType);
+           if(editData.enable == 'true'){
+           	editData.enable = true
+           }else{
+           	editData.enable = false
+           }
+          var editForm = JSON.stringify(editData);
+          console.log(editForm)
+            //将编辑后的摄像机信息传递给摄像头列表
+            //进行预加载
+          var prPage = mui.preload({url:'notifyList.html',id:'notifyList.html'});
+          mui.fire(prPage,'editList',{editData:editForm});
+          mui.openWindow({
+            url:'notifyList.html',
+            id:'notifyList.html'
+          });
+        });
+        
+        /**
+         * 遍历form表单，获取表单中的数据
+         */
+        $.fn.serializeObject = function() {
+          var o = {};
+          var a = this.serializeArray();
+          $.each(a, function() {
+            if (o[this.name]) {
+              if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+              }
+              o[this.name].push(this.value || '');
+            } else {
+              o[this.name] = this.value || '';
+            }
+          });
+          return o;
+        };
+    });
+		</script>
+	</body>
+</html>

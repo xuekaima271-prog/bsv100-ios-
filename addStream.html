@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>添加摄像机</title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0px 0px 0.5%;
+			} */
+			
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-switch {
+				width: 85px;
+			}
+			
+			.mui-btn-save {
+				margin-top: 15px;
+				width: 40%;
+				height: 40px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<h1 class="mui-title">添加推流信息</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="addStream_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>编号</label>
+							<input type="text" class="mui-input-clear" name="id" id="addStream_form_id" placeholder="请输入编号" />
+						</div>
+						<div class="mui-input-row" id="addStream_form_label">
+							<label>推流描述</label>
+							<input type="text" class="mui-input-clear" name="label" placeholder="请输入描述信息"  />
+						</div>
+						<div class="mui-input-row mui-right">
+							<label>启用</label>
+							<div class="mui-switch" name="enable" id="addStream_form_enable">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label>摄像机编号</label>
+							<select id="stearm_cameras_id" onchange="changeI()">
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>码流类型</label>
+							<select id="stearm_cameras_url" onchange="changeI()">
+								<option value="01">主码流</option>
+								<option value="02">子码流</option>
+							</select>
+						</div>
+						<div class="mui-input-row">
+							<label>url地址</label>
+						</div>
+						<div class="mui-input-row">
+							<input type="text" name="url" id="stearms_url" value="" readonly="readonly" style="background-color: lightgray;" />
+						</div>
+					</li>
+				</ul>
+			</form>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">确认添加</button>
+			</div>
+		</div>
+		
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function () {
+				//服务器请求的URL地址
+				var baseConfigIp = configIp;
+				
+				//服务器请求的端口号
+				var baseConfigPort = configPort;
+				
+				//发送请求获取当前基本配置
+				mui.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadVStreamRecorder.cgi',
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						let configData = data.config;
+						let cameras = configData.cameras;
+						$("#stearm_cameras_id").html("");
+						let $liNode = "";
+						for (let i = 0; i < cameras.length; i++) {
+								$liNode +=
+								'<option value="' + cameras[i].id + '">' + cameras[i].id + '</option>'
+						}
+						//添加至ul中
+						$("#stearm_cameras_id").html($liNode);
+						let Sid = $('#stearm_cameras_id').val();
+						let Surl = $('#stearm_cameras_url').val();
+						$('#stearms_url').val('rtsp://127.0.0.1:8554/Streaming/Channels/'+ Sid + Surl)
+					}
+				});
+				
+				document.getElementById('saveBtn').addEventListener('tap',function(){
+					//获取表单数据
+					let addStream = $('#addStream_form').serializeObject();
+					let enableIsActivity = document.getElementById("addStream_form_enable").classList.contains("mui-active");
+					addStream.enable = enableIsActivity;
+					if (addStream.id == '') {
+						mui.alert('编号不能为空','提示','确认')
+					}
+					addStream.id = Number(addStream.id);
+					console.log(JSON.stringify(addStream))
+					//将摄像机信息转化为json字符串，用于页面传值
+					addStreamS = JSON.stringify(addStream);
+					
+					//将新增的摄像机传值给摄像头列表
+					//进行预加载
+					var prPage = mui.preload({url:'streams.html',id:'streams.html'});
+					mui.fire(prPage,'saveStream',{data:addStreamS});
+					mui.openWindow({
+						url:'streams.html',
+						id:'streams.html'
+					});
+					
+					//清空form表单
+					$("#addStream_form input").val("");
+				})
+				
+				
+				//遍历form表单，获取表单中的数据
+				$.fn.serializeObject = function() {
+					var o = {};
+					var a = this.serializeArray();
+					$.each(a, function() {
+						if (o[this.name]) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};
+			})
+			
+			function changeI(){
+				let Sid = $('#stearm_cameras_id').val();
+				let Surl = $('#stearm_cameras_url').val();
+				$('#stearms_url').val('rtsp://127.0.0.1:8554/Streaming/Channels/'+ Sid + Surl)
+			}
+			
+		</script>
+
+	</body>
+
+</html>

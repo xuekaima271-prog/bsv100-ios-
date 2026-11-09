@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>摄像头详情</title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0.5% 0px 0.5%;
+			} */
+
+			.mui-button-div {
+				height: 50px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 10px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+			
+			.mui-switch{
+				width: 85px;
+			}
+			
+			.mui-readonly{
+				pointer-events:none;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">摄像头信息</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group mui-readonly">
+				<ul class="mui-table-view mui-input-group" id="NVRCamera_camera_message">
+					
+				</ul>
+			</form>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+				
+				//接收来自主页面传来的摄像机列表
+			    var self = plus.webview.currentWebview();
+			    var subCamera = self.camera;
+					var cameraS = JSON.parse(subCamera);
+					
+					var cameras = cameraS;
+					
+					//删除ul内的所有节点,避免数据重复
+					$("#NVRCamera_camera_message").html("");
+					
+					//根据接收到的摄像机数据，动态生成摄像机列表
+					var $liNode = "";
+						if (cameras.type == 1) {
+							$liNode +=
+								'<li class="mui-table-view-cell">' +
+									'<div class="mui-input-row">' +
+										'<label>编号</label>' +
+										'<input type="text" class="mui-input-clear" name="id" id="NVRCamera_camera_id"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>类型</label>' +
+										'<input type="text" class="mui-input-clear" name="type" id="NVRCamera_camera_type"/>' +
+									'</div>' +
+									'<div class="mui-input-row mui-right">' +
+										'<label>是否启用</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_enable" name="enable">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>保存录像</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_recordEnable" name="recordEnable">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>主码流url</label>' +
+									'</div>' +
+									'<div class="mui-input-row" style="height:60px">' +
+										'<textarea type="text" class="mui-input-clear" name="urlmain" id="NVRCamera_camera_urlmain"/>' +
+									'</div>' +
+									'<div class="mui-input-row" >' +
+										'<label>子码流url</label>' +
+									'</div>' +
+									'<div class="mui-input-row"  style="height:60px">' +
+										'<textarea type="text" class="mui-input-clear" name="urlsub" id="NVRCamera_camera_urlsub"/>' +
+									'</div>' +
+								'</li>';
+						} else if (cameras.type == 2) {
+							$liNode +=
+								'<li class="mui-table-view-cell">' +
+									'<div class="mui-input-row">' +
+										'<label>编号</label>' +
+										'<input type="text" class="mui-input-clear" name="id" id="NVRCamera_camera_id"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>类型</label>' +
+										'<input type="text" class="mui-input-clear" name="type" id="NVRCamera_camera_type"/>' +
+									'</div>' +
+									'<div class="mui-input-row mui-right">' +
+										'<label>是否启用</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_enable" name="enable">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>保存录像</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_recordEnable" name="recordEnable">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>设备名称</label>' +
+										'<input type="text" class="mui-input-clear" name="device" id="NVRCamera_camera_device"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>显示名称</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_showTitle" name="showTitle">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div id="NVRCamera_camera_title_div">' +
+										'<div class="mui-input-row">' +
+											'<label>摄像机名称</label>' +
+											'<input type="text" class="mui-input-clear" name="title" id="NVRCamera_camera_title"/>' +
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>字体尺寸</label>' +
+										'<input type="text" class="mui-input-clear" name="titleFont" id="NVRCamera_camera_titleFont"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>录像帧率</label>' +
+										'<input type="text" class="mui-input-clear" name="frameRate" id="NVRCamera_camera_frameRate"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>码率(kb)</label>' +
+										'<input type="text" class="mui-input-clear" name="bitRate" id="NVRCamera_camera_bitRate"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>I帧间隔</label>' +
+										'<input type="text" class="mui-input-clear" name="iGap" id="NVRCamera_camera_iGap"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>主码流宽度</label>' +
+										'<input type="text" class="mui-input-clear" name="mainWidth" id="NVRCamera_camera_mainWidth"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>主码流高度</label>' +
+										'<input type="text" class="mui-input-clear" name="mainHeight" id="NVRCamera_camera_mainHeight"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>支持子码流</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_subStream" name="subStream">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div id="NVRCamera_camera_subStream_div">' +
+										'<div class="mui-input-row">' +
+											'<label>子码流宽度</label>' +
+											'<input type="text" class="mui-input-clear" name="subWidth" id="NVRCamera_camera_subWidth"/>' +
+										'</div>' +
+										'<div class="mui-input-row">' +
+											'<label>子码流高度</label>' +
+											'<input type="text" class="mui-input-clear" name="subHeight" id="NVRCamera_camera_subHeight"/>' +
+										'</div>' +
+										'<div class="mui-input-row">' +
+											'<label>I帧间隔</label>' +
+											'<input type="text" class="mui-input-clear" name="subIGap" id="NVRCamera_camera_subIGap"/>' +
+										'</div>' +
+										'<div class="mui-input-row">' +
+											'<label>码率(kb)</label>' +
+											'<input type="text" class="mui-input-clear" name="subBitRate" id="NVRCamera_camera_subBitRate"/>' +
+										'</div>' +
+									'</div>' +
+								'</li>'
+						} else if (cameras.type == 3) {
+							$liNode +=
+								'<li class="mui-table-view-cell">' +
+									'<div class="mui-input-row">' +
+										'<label>编号</label>' +
+										'<input type="text" class="mui-input-clear" name="id" id="NVRCamera_camera_id"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>类型</label>' +
+										'<input type="text" class="mui-input-clear" name="type" id="NVRCamera_camera_type"/>' +
+									'</div>' +
+									'<div class="mui-input-row mui-right">' +
+										'<label>启用</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_enable" name="enable">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>保存录像</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_recordEnable" name="recordEnable">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>设备名称</label>' +
+										'<input type="text" class="mui-input-clear" name="device" id="NVRCamera_camera_device"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>显示名称</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_showTitle" name="showTitle">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div id="NVRCamera_camera_title_div">' +
+									'<div class="mui-input-row">' +
+										'<label>摄像机名称</label>' +
+										'<input type="text" class="mui-input-clear" name="title" id="NVRCamera_camera_title"/>' +
+									'</div>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>字体尺寸</label>' +
+										'<input type="text" class="mui-input-clear" name="titleFont" id="NVRCamera_camera_titleFont"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>帧率</label>' +
+										'<input type="text" class="mui-input-clear" name="frameRate" id="NVRCamera_camera_frameRate"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>码率(kb)</label>' +
+										'<input type="text" class="mui-input-clear" name="bitRate" id="NVRCamera_camera_bitRate"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>I帧间隔</label>' +
+										'<input type="text" class="mui-input-clear" name="iGap" id="NVRCamera_camera_iGap"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>主码流宽度</label>' +
+										'<input type="text" class="mui-input-clear" name="mainWidth" id="NVRCamera_camera_mainWidth"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>主码流高度</label>' +
+										'<input type="text" class="mui-input-clear" name="mainHeight" id="NVRCamera_camera_mainHeight"/>' +
+									'</div>' +
+									'<div class="mui-input-row">' +
+										'<label>支持子码流</label>' +
+										'<div class="mui-switch" id="NVRCamera_camera_subStream" name="subStream">'+
+											'<div class="mui-switch-handle"></div>'+
+										'</div>' +
+									'</div>' +
+									'<div id="NVRCamera_camera_subStream_div">' +
+										'<div class="mui-input-row">' +
+											'<label>子码流宽度</label>' +
+											'<input type="text" class="mui-input-clear" name="subWidth" id="NVRCamera_camera_subWidth"/>' +
+										'</div>' +
+										'<div class="mui-input-row">' +
+											'<label>子码流高度</label>' +
+											'<input type="text" class="mui-input-clear" name="subHeight" id="NVRCamera_camera_subHeight"/>' +
+										'</div>' +
+										'<div class="mui-input-row">' +
+											'<label>I帧间隔</label>' +
+											'<input type="text" class="mui-input-clear" name="subIGap" id="NVRCamera_camera_subIGap"/>' +
+										'</div>' +
+										'<div class="mui-input-row">' +
+											'<label>码率(kb)</label>' +
+											'<input type="text" class="mui-input-clear" name="subBitRate" id="NVRCamera_camera_subBitRate"/>' +
+										'</div>' +
+									'</div>' +
+								'</li>'
+						}
+						
+					//添加至ul中
+					$("#NVRCamera_camera_message").html($liNode);
+					mui('.mui-switch')['switch']();
+					
+					//回显时，将为xxx的摄像机名称回显为‘’
+					if (cameras.title == 'xxx') {
+						cameras.title = "";
+					}
+					
+					//回显摄像机类型，接受到的是整型
+					switch(cameras.type){
+						case 1:cameras.type = 'IPC';break;
+						case 2:cameras.type = 'UVC';break;
+						case 3:cameras.type = 'AHD';break
+					}
+					
+					switch(cameras.type){
+						case '1':cameras.type = 'IPC';break;
+						case '2':cameras.type = 'UVC';break;
+						case '3':cameras.type = 'AHD';break
+					}
+	
+					//摄像机类型回显
+					for (let cameraIndex in cameras) {
+						$("#NVRCamera_camera_" + cameraIndex).val(cameras[cameraIndex]);
+					};
+					
+					//状态信息展示
+					
+					//是否启用回显
+					var enableDiv = document.getElementById("NVRCamera_camera_enable");
+					if (cameras.enable == true || cameras.enable == 'true') {
+						mui("#NVRCamera_camera_enable").switch().toggle();
+						enableDiv.classList.add('mui-active');
+					}else {
+						enableDiv.classList.remove('mui-active');
+					}
+					
+					//是否保存记录回显
+					var recordEnableDiv = document.getElementById("NVRCamera_camera_recordEnable");
+					if (cameras.recordEnable == true || cameras.recordEnable == 'true') {
+						mui("#NVRCamera_camera_recordEnable").switch().toggle();
+						recordEnableDiv.classList.add('mui-active');
+					}else{
+						recordEnableDiv.classList.remove('mui-active');
+					}
+					
+					//是否显示名称回显
+					var showTitleDiv = document.getElementById("NVRCamera_camera_showTitle");
+					if (cameras.showTitle == true || cameras.showTitle == 'true') {
+						mui("#NVRCamera_camera_showTitle").switch().toggle();
+						showTitleDiv.classList.add('mui-active');
+						$("#NVRCamera_camera_title_div").show();
+					} else {
+						$("#NVRCamera_camera_title_div").hide();
+					}
+					
+					//是否支持子码流回显
+					var subStreamDiv = document.getElementById("NVRCamera_camera_subStream");
+					if (cameras.subStream == true || cameras.subStream == 'true') {
+						mui("#NVRCamera_camera_subStream").switch().toggle();
+						subStreamDiv.classList.add('mui-active');
+						$("NVRCamera_camera_subStream_div").show();
+					} else {
+						$("#NVRCamera_camera_subStream_div").hide();
+					}
+					
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-btn-save { 
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+			.mui-input-blackColor {
+				background-color: #F2F4F5;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">Rtmp配置</a>
+		</header>
+		<div class="mui-content">
+
+    <form class="mui-input-group" id="loadPushRtmpFFmpeg_mqtt_form">
+      <ul class="mui-table-view mui-input-group">
+        <li class="mui-table-view-cell mui-table-view-cell-title">mqtt配置</li>
+        <li class="mui-table-view-cell">
+          <div class="mui-input-row">
+            <label>上报主题</label>
+            <input type="text" name="reportTopic" id="loadPushRtmpFFmpeg_mqtt_reportTopic" />
+          </div>
+          <div class="mui-input-row">
+            <label>订阅主题</label>
+            <input type="text" name="subTopic" id="loadPushRtmpFFmpeg_mqtt_subTopic" />
+          </div>
+        </li>
+      </ul>
+    </form>
+    
+    <form class="mui-input-group" id="loadPushRtmpFFmpeg_form">
+      <ul class="mui-table-view mui-input-group">
+        <li class="mui-table-view-cell mui-table-view-cell-title">rtmp推送配置</li>
+        <li class="mui-table-view-cell">
+          <div class="mui-input-row">
+            <label>目标地址</label>
+            <input type="text" name="dstIp" id="loadPushRtmpFFmpeg_form_dstIp" />
+          </div>
+          <div class="mui-input-row">
+            <label>目标端口</label>
+            <input type="text" name="dstPort" id="loadPushRtmpFFmpeg_form_dstPort" />
+          </div>
+          <div class="mui-input-row">
+            <label>nginx推流参数</label>
+            <input type="text" name="nginxPath" id="loadPushRtmpFFmpeg_form_nginxPath" />
+          </div>
+        </li>
+      </ul>
+    </form>
+    
+    <div class="mui-button-row" style="height: 40px;margin-top: 10px;">
+      <span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+    </div>
+    <div class="mui-button-row">
+      <button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+    </div>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+
+			//请求的URL地址
+			var baseConfigIp = configIp;
+			
+			//请求的端口号
+			var baseConfigPort = configPort;
+			
+			//发送请求获取全局配置的基本信息
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadPushRtmpFFmpeg.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.config;
+					for (let baseIndex in configData) {
+						if (baseIndex == "mqtt") {
+							let mqttData = configData[baseIndex];
+							for (let mqttIndex in mqttData) {
+								 document.getElementById("loadPushRtmpFFmpeg_mqtt_" + mqttIndex).value = mqttData[mqttIndex];
+							}
+						} else {
+              document.getElementById("loadPushRtmpFFmpeg_form_" + baseIndex).value = configData[baseIndex];
+            }
+					}
+				}
+			});
+			
+			//点击保存储存信息
+			document.getElementById('saveBtn').addEventListener('tap', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						// 获取消息总线表单数据
+						var loadPushRtmpFFmpeg_mqtt = $('#loadPushRtmpFFmpeg_mqtt_form').serializeObject();
+            var rtmpData = $('#loadPushRtmpFFmpeg_form').serializeObject();
+						rtmpData.dstPort = Number(rtmpData.dstPort);
+						//将获取的数据组装成服务器接受的formdata格式
+            var data = {
+              mqtt: loadPushRtmpFFmpeg_mqtt,
+              dstIp: rtmpData.dstIp,
+              dstPort: rtmpData.dstPort,
+              nginxPath: rtmpData.nginxPath
+            }
+						var config = {
+							config: JSON.stringify(data)
+						}
+						var formdata = new FormData();
+						for (let index in config){
+							formdata.append(index,config[index])
+						}
+						//将修改后的数据发送请求给服务器进行保存
+						$.ajax({
+							url: baseConfigIp + baseConfigPort + 'savePushRtmpFFmpeg.cgi',
+							data: formdata,
+							type: 'post',
+							processData: false,
+							contentType: false,
+							success: function(data) {
+								if(data.resultCode == 0){
+									mui.alert('保存成功')
+								} else{
+                  mui.alert('保存失败，请重试')
+								}
+							}
+						});
+					}
+				})
+			});
+			
+			//遍历form表单，获取表单中的信息
+			$.fn.serializeObject = function() {
+				var o = {};
+				var a = this.serializeArray();
+				$.each(a, function() {
+					if (o[this.name]) {
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]];
+						}
+						o[this.name].push(this.value || '');
+					} else {
+						o[this.name] = this.value || '';
+					}
+				});
+				return o;
+			};
+		</script>
+		<script type="text/javascript">
+			
+		</script>
+	</body>
+</html>

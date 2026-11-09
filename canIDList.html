@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>canID列表</title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/app.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view-cell {
+				height: 50px;
+			}
+			
+			.mui-btn-save {
+				margin-top: 20px;
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-table-view {
+				width: 99%;
+				margin: 0px 0.5% 0px 0.5%;
+			}
+
+			.mui-a-add {
+				float: right;
+				font-size: 30px;
+			}
+			
+			.mui-btn-div-inco{
+				width: 5%;
+				float: right;
+				margin-right: 10px;
+			}
+			.div-green{
+				height: 10px;
+				width: 10px;
+				border-radius: 5px;
+				background-color: limegreen;
+				display: inline-block;
+				margin-right: 5px;
+			}
+			.div-grey{
+				height: 10px;
+				width: 10px;
+				border-radius: 5px;
+				background-color: gray;
+				display: inline-block;
+				margin-right: 5px;
+			}
+      .textPosition{
+        text-align: left !important;
+      }
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-arrowleft mui-pull-left" id="Stream_streams_save"></a>
+			<a class="mui-title">canID列表</a>
+			<!-- <a class="mui-icon mui-icon-plusempty mui-a-add" id="addStream"></a> -->
+		</header>
+		<div class="mui-content">
+			<ul id="canId_list" class="mui-table-view">
+			</ul>
+			<div class="addDiv">
+				<img src="img/newAdd.png" style="width: 60px;height: 60px;" id="canIDList">
+			</div>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+      mui.plusReady(function () {
+        //接受来自主页面的传值
+        var self = plus.webview.currentWebview();
+        var canIDList = self.canIDList;
+        var saveList = [] 
+        //初始化加载页面
+        reload(canIDList);
+        document.getElementById('Stream_streams_save').addEventListener('tap',function(){
+          //页面传值给推流列表
+          //进行预加载
+          var prPage = mui.preload({url:'loadCanProxy.html',id:'loadCanProxy.html'});
+          for (var i = 0; i < canIDList.length; i++) {
+            var a = []
+            a = (document.getElementById('' + i).value)
+            saveList.splice(i,1,a)
+          }
+          mui.fire(prPage,'saveList',{datas:JSON.stringify(saveList)});
+          mui.openWindow({
+            url:'loadCanProxy.html',
+            id:'loadCanProxy.html'
+          });
+        });
+        
+        //添加
+        document.getElementById('canIDList').addEventListener('tap',function(){
+          var i = canIDList.length
+          var addList =
+            '<li class="mui-table-view-cell">' +
+              '<div class="mui-slider-right mui-disabled">' +
+                '<a class="mui-btn mui-btn-red" deleteData='+ i +' id="deleteList' + i +'"> 删除 </a>' +
+              '</div>' +
+              '<div class="mui-slider-handle mui-table" showData='+ canIDList[i] + '>' +
+                '<div class="mui-table-cell mui-input-row" style="width: 100%; line-height: 30px;">' + 
+                  '<label style="width: 20%;">编号' + i + '：' + '</label>'+
+                  '<input type="text" style="width: 80%;" class="mui-input-clear textPosition" id='+ i +'>'+
+                '</div>' +
+              '</div>' +
+            '</li>';
+          $("#canId_list").append(addList)
+          var b = (document.getElementById('' + i).value)
+          canIDList[i] = b
+          
+          
+          for (var i = 0; i < canIDList.length; i++) {
+          	$("#"+i).val(canIDList[i]);					
+          	// 删除推流
+          	document.getElementById('deleteList' + i ).addEventListener('tap',function(){
+              console.log($(this).attr("deleteData"))
+          		let deleteD = $(this).attr("deleteData");
+              console.log(deleteD)
+              // return
+          		canIDList.splice(deleteD,1);
+          		reload(canIDList);
+          	});
+          };
+        });
+      })
+
+			//初始化页面
+			function reload(canIDList){
+				let divtype;
+				//	删除ul内的所有节点,避免数据重复
+				$("#canId_list").html("");
+				
+				var $liNode = "";
+				for (var i = 0; i < canIDList.length; i++) {
+					//动态创建节点
+					$liNode +=
+						'<li class="mui-table-view-cell">' +
+							'<div class="mui-slider-right mui-disabled">' +
+								'<a class="mui-btn mui-btn-red" deleteData='+ i +' id="deleteList' + i +'"> 删除 </a>' +
+							'</div>' +
+							'<div class="mui-slider-handle mui-table" showData='+ canIDList[i] + '>' +
+								'<div class="mui-table-cell mui-input-row" style="width: 100%; line-height: 30px;">' + 
+                  '<label style="width: 20%;">编号' + i + '：' + '</label>'+
+                  '<input type="text" style="width: 80%;" class="mui-input-clear textPosition" id='+ i +'>'+
+                '</div>' +
+							'</div>' +
+						'</li>';
+          // $("#"+i).val(canIDList[i]);  
+				  }
+				//添加至ul中
+				$("#canId_list").html($liNode);
+        
+				for (var i = 0; i < canIDList.length; i++) {
+					$("#"+i).val(canIDList[i]);					
+					// 删除推流
+					document.getElementById('deleteList' + i ).addEventListener('tap',function(){
+            console.log($(this).attr("deleteData"))
+						let deleteD = $(this).attr("deleteData");
+            console.log(deleteD)
+            // return
+						canIDList.splice(deleteD,1);
+						reload(canIDList);
+					});
+				};
+			};
+      
+		</script>
+	</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/app.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view-cell {
+				height: 50px;
+			}
+			
+			.mui-btn-save {
+				margin-top: 20px;
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-table-view {
+				width: 99%;
+				margin: 0px 0.5% 0px 0.5%;
+			}
+
+			.mui-a-add {
+				float: right;
+				font-size: 30px;
+			}
+			
+			.mui-btn-div-inco{
+				width: 5%;
+				float: right;
+				margin-right: 10px;
+			}
+			.div-green{
+				height: 10px;
+				width: 10px;
+				border-radius: 5px;
+				background-color: limegreen;
+				display: inline-block;
+				margin-right: 5px;
+			}
+			.div-grey{
+				height: 10px;
+				width: 10px;
+				border-radius: 5px;
+				background-color: gray;
+				display: inline-block;
+				margin-right: 5px;
+			}
+      .textPosition{
+        text-align: left !important;
+      }
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-icon mui-icon-arrowleft mui-pull-left" id="notifyList_save"></a>
+			<a class="mui-title">通知列表</a>
+			<!-- <a class="mui-icon mui-icon-plusempty mui-a-add" id="addStream"></a> -->
+		</header>
+		<div class="mui-content">
+			<ul id="canId_list" class="mui-table-view">
+			</ul>
+			<div class="addDiv">
+				<img src="../img/newAdd.png" style="width: 60px;height: 60px;" id="addList">
+			</div>
+		</div>
+
+		<script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+      mui.plusReady(function () {
+        //接受来自主页面的传值
+        var self = plus.webview.currentWebview();
+        console.log(JSON.stringify(self.notifyList))
+        var notifyList = self.notifyList;
+        var saveList = [] 
+        // //初始化加载页面
+        reload(notifyList);
+        //添加推流跳转页面
+        document.getElementById('addList').addEventListener('tap',function(){
+        	mui.openWindow({
+        		url: 'addList.html',
+        		id:'addList'
+        	})
+        });
+        //传值给主页面
+        document.getElementById('notifyList_save').addEventListener('tap',function(){
+          //页面传值给推流列表
+          //进行预加载
+          var prPage = mui.preload({url:'./UVMonitor/loadUVMonitor.html',id:'./UVMonitor/loadUVMonitor.html'});
+          // for (var i = 0; i < canIDList.length; i++) {
+          //   var a = []
+          //   a = (document.getElementById('' + i).value)
+          //   saveList.splice(i,1,a)
+          // }
+          mui.fire(prPage,'saveList',{datas:JSON.stringify(notifyList)});
+          mui.openWindow({
+            url:'./UVMonitor/loadUVMonitor.html',
+            id:'./UVMonitor/loadUVMonitor.html'
+          });
+        });
+        //获得添加页面传过来的信息
+        window.addEventListener('saveAddList',function(e){
+        	let newList = e.detail.data;
+          console.log(JSON.stringify(newList))
+        	notifyList[notifyList.length] = JSON.parse(newList);
+        	plus.webview.close('saveAddList');
+        	reload(notifyList);
+        	// console.log(JSON.stringify(cameras))
+        });
+        
+        //获得编辑页面传过来的信息
+        window.addEventListener('editList',function(e){
+        	let newEditStream = e.detail.editData;
+        	let editC = JSON.parse(newEditStream);
+          console.log(JSON.stringify(editC))
+        	for (let i = 0; i < notifyList.length; i++) {
+        		if(notifyList[i].name == editC.name){
+        			notifyList[i] = editC;
+        		}
+        	}
+          console.log(JSON.stringify(notifyList))
+        	plus.webview.close('editList');
+        	reload(notifyList);
+        });
+      })
+
+			//初始化页面
+			function reload(notifyList){
+				let divtype;
+				//	删除ul内的所有节点,避免数据重复
+				$("#canId_list").html("");
+				
+				var $liNode = "";
+				for (var i = 0; i < notifyList.length; i++) {
+					//动态创建节点
+					$liNode +=
+					'<li class="mui-table-view-cell">' +
+					  '<div class="mui-slider-right mui-disabled">' +
+					    '<a class="mui-btn mui-btn-green" editData='+JSON.stringify(notifyList[i])+' id="editList' + notifyList[i].name +'"> 编辑 </a>' +
+					      '<a class="mui-btn mui-btn-red" deleteData='+ i +' id="deleteList' + notifyList[i].name +'"> 删除 </a>' +
+					      '</div>' +
+					      '<div class="mui-slider-handle mui-table" showData=' + JSON.stringify(notifyList[i]) + ' ' +'id="' + notifyList[i].name + '">' +
+                  '<div class="mui-table-cell" style="width: 80%;"><div class="'+divtype+'"></div>软件编号：' + i +'（' + notifyList[i].name + '）</div>' +
+                  '<div class="mui-btn-div-inco" style="width: 20%;">' +
+					      '<a class="mui-icon mui-icon-arrowright"></a>' +
+					    '</div>' +
+					  '</div>' +
+					'</li>';
+				  }
+				// //添加至ul中
+				$("#canId_list").html($liNode);
+        
+        for (var i = 0; i < notifyList.length; i++) {
+          // //页面跳转至展示页
+          document.getElementById(notifyList[i].name).addEventListener('tap', function() {
+            console.log($(this).attr("showData"))
+            mui.openWindow({
+              url: 'showList.html',
+              id : 'showList',
+              extras:{
+                showListData:$(this).attr("showData")
+              }
+            })
+          });
+        	
+        	// 页面跳转至编辑页面
+        	document.getElementById('editList' + notifyList[i].name).addEventListener('tap', function() {
+        		//console.log($(this).attr("editData"))
+        		mui.openWindow({
+        			url: 'editList.html',
+        			id : 'editList',
+        			extras:{
+        				editListData:$(this).attr("editData")
+        			}
+        		});
+        	});
+        	//删除推流
+        	document.getElementById('deleteList' + notifyList[i].name).addEventListener('tap',function(){
+        		let deleteD = $(this).attr("deleteData");
+        		notifyList.splice(deleteD,1);
+        		reload(notifyList);
+        	});
+        };
+			};
+		</script>
+	</body>
+</html>

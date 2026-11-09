@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>推流详情</title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0.5% 0px 0.5%;
+			} */
+
+			.mui-button-div {
+				height: 50px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 10px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+			
+			.mui-switch{
+				width: 85px;
+			}
+			
+			.mui-readonly{
+				pointer-events:none;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">软件信息</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group mui-readonly" id="loadUVMonitor_notifyList_form">
+			  <ul class="mui-table-view mui-input-group">
+			    <li class="mui-table-view-cell">
+			      <div class="mui-input-row">
+			        <label>软件编码</label>
+			        <input type="text" name="softType" id="loadUVMonitor_mountList_softType" />
+			      </div>
+			      <div class="mui-input-row">
+			        <label>软件名称</label>
+			        <input type="text" name="name" id="loadUVMonitor_mountList_name" />
+			      </div>
+            <div class="mui-input-row">
+            	<label>是否通知</label>
+            	<div class="mui-switch" id="loadUVMonitor_mountList_enable" name="lteEnable">
+            		<input type="hidden" id="loadUVMonitor_mountList_enable_in" name="lteEnable">
+            		<div class="mui-switch-handle"></div>
+            	</div>
+            </div>
+			      <div class="mui-input-row">
+			        <label>处理时间限制</label>
+			        <input type="text" name="overTime" id="loadUVMonitor_mountList_overTime" />
+			      </div>
+			    </li>
+			  </ul>
+			</form>
+		</div>
+
+		<script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+				
+				//接收来自主页面传来的摄像机列表
+			    var self = plus.webview.currentWebview();
+          console.log(JSON.stringify(self))
+			    var showData = self.showListData;
+          var showDataList = JSON.parse(showData)
+          // console.log(JSON.stringify(a))
+          for (let index in showDataList) {
+             document.getElementById('loadUVMonitor_mountList_' + index).value = showDataList[index]
+          }
+					// 是否启用回显
+					var enableDiv = document.getElementById("loadUVMonitor_mountList_enable");
+					if (showDataList.enable == true || showDataList.enable == 'true') {
+						mui("#loadUVMonitor_mountList_enable").switch().toggle();
+						enableDiv.classList.add('mui-active');
+					}else {
+						enableDiv.classList.remove('mui-active');
+					}
+					
+			});
+		</script>
+	</body>
+</html>

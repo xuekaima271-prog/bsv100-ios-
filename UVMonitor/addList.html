@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.css" rel="stylesheet" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-switch {
+				width: 85px;
+			}
+			
+			.mui-btn-save {
+				margin-top: 15px;
+				width: 40%;
+				height: 40px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<h1 class="mui-title">添加通知列表信息</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadUVMonitor_notifyList_form">
+			  <ul class="mui-table-view mui-input-group">
+			    <li class="mui-table-view-cell">
+			      <div class="mui-input-row">
+			        <label>软件编码</label>
+			        <input type="text" name="softType" id="loadUVMonitor_mountList_softType" />
+			      </div>
+			      <div class="mui-input-row">
+			        <label>软件名称</label>
+			        <input type="text" name="name" id="loadUVMonitor_mountList_name" />
+			      </div>
+            <div class="mui-input-row">
+              <label>是否通知</label>
+              <div class="mui-switch" id="loadUVMonitor_mountList_enable" name="enable">
+                <input type="hidden" id="loadUVMonitor_mountList_enable_in" name="enable">
+                <div class="mui-switch-handle"></div>
+              </div>
+            </div>
+			      <div class="mui-input-row">
+			        <label>处理时间限制</label>
+			        <input type="text" name="overTime" id="loadUVMonitor_mountList_overTime" />
+			      </div>
+			    </li>
+			  </ul>
+			</form>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">确认添加</button>
+			</div>
+		</div>
+		<script src="../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function () {
+				//服务器请求的URL地址
+				var baseConfigIp = configIp;
+				
+				//服务器请求的端口号
+				var baseConfigPort = configPort;
+        var addDatas = ''
+        
+        //点击保存状态信息
+        document.getElementById('loadUVMonitor_mountList_enable').addEventListener('tap', function() {
+        	let stateVal = $('#loadUVMonitor_mountList_enable_in').val();
+          console.log(JSON.stringify(stateVal))
+        	if (stateVal == "true" || stateVal == true) {
+        		$('#loadUVMonitor_mountList_enable_in').val(false);
+        	} else {
+        		$('#loadUVMonitor_mountList_enable_in').val(true);
+        	}
+        });
+								
+				document.getElementById('saveBtn').addEventListener('tap',function(){
+					//获取表单数据
+					let addData = $('#loadUVMonitor_notifyList_form').serializeObject();
+          addData.overTime = Number(addData.overTime);
+          addData.softType = Number(addData.softType);
+          if(addData.enable == 'true'){
+          	addData.enable = true
+          }else{
+          	addData.enable = false
+          }
+					//将摄像机信息转化为json字符串，用于页面传值
+					addDatas = JSON.stringify(addData);
+					
+					//将新增的摄像机传值给摄像头列表
+					//进行预加载
+					var prPage = mui.preload({url:'notifyList.html',id:'notifyList.html'});
+					mui.fire(prPage,'saveAddList',{data:addDatas});
+					mui.openWindow({
+						url:'notifyList.html',
+						id:'notifyList.html'
+					});
+					
+					//清空form表单
+					$("#loadUVMonitor_notifyList_form input").val("");
+				})
+				
+				
+				//遍历form表单，获取表单中的数据
+				$.fn.serializeObject = function() {
+					var o = {};
+					var a = this.serializeArray();
+					$.each(a, function() {
+						if (o[this.name]) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};
+			})
+		</script>
+	</body>
+</html>

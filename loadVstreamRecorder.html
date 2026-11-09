@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0px 0px 0.5%;
+			} */
+
+			.mui-button-div {
+				height: 40px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 15px;
+			}
+
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+			
+			.mui-switch{
+				width: 90px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">NVR配置</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadVstreamRecorder_config_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">基本配置</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label style="width: 55%;">RTSP端口</label>
+							<input style="width: 45%;" type="text"  id="loadVstreamRecorder_config_port" name="port" />
+						</div>
+						<div class="mui-input-row mui-right">
+							<label>保存视频</label>
+							<div class="mui-switch" id="loadVstreamRecorder_config_recordEnable" name="recordEnable">
+								<input id="load_v_str_hidden_config_recordEnable" type="hidden" name="recordEnable"/>
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+								<label style="width: 55%;">录像片段时长（分钟）</label>
+								<input style="width: 45%;" type="text"  id="loadVstreamRecorder_config_duration" name="duration" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 55%;">录像保存天数（天）</label>
+							<input style="width: 45%;" type="text" id="loadVstreamRecorder_config_recordDays" name="recordDays" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 55%;">录像最大容量（M）</label>
+							<input style="width: 45%;" type="text"  id="loadVstreamRecorder_config_storageSize" name="storageSize" />
+						</div>
+						<div class="mui-input-row">
+							<label>支持鉴权</label>
+							<div class="mui-switch" id="loadVstreamRecorder_config_auth" name="auth">
+								<input id="loadVstreamRecorder_config_auth_in" type="hidden" name="auth"/>
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div id="loadVstreamRecorder_config_auth_div">
+							<div class="mui-input-row">
+								<label>鉴权用户名</label>
+								<input type="text"  id="loadVstreamRecorder_config_userName" name="userName" />
+							</div>
+							<div class="mui-input-row">
+								<label>鉴权密码</label>
+								<input type="password" class="mui-input-password" id="loadVstreamRecorder_config_password" name="password" />
+							</div>
+						</div>
+            <div class="mui-input-row mui-right">
+            	<label>保存到内存卡</label>
+            	<div class="mui-switch" id="loadVstreamRecorder_config_sdAutoDetect" name="sdAutoDetect">
+            		<input id="sdAutoDetect_in" type="hidden" name="sdAutoDetect"/>
+            		<div class="mui-switch-handle"></div>
+            	</div>
+            </div>
+            <div class="mui-input-row">
+            	<label style="width: 55%;">文件路径</label>
+            	<input style="width: 45%;" type="text"  id="loadVstreamRecorder_config_videoPath" name="videoPath" />
+            </div>
+					</li>
+				</ul>
+			</form>
+			<!-- 摄像头列表 -->
+			<form class="mui-input-group" id="loadVstreamRecorder_camera_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">摄像头列表</li>
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" id="loadVstreamRecorder_camera_cameras">查看列表</a>
+					</li>
+				</ul>
+			</form>
+			<!-- 消息总线 -->
+			<form class="mui-input-group" id="loadVstreamRecorder_mqtt_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">消息总线</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>是否有效</label>
+							<div class="mui-switch" id="loadVstreamRecorder_mqtt_enable" name="enable">
+								<input id="loadVstreamRecorder_mqtt_enable_in" type="hidden" name="enable"/>
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div id="loadVstreamRecorder_mqtt_div">
+							<div class="mui-input-row">
+								<label>发布的主题</label>
+								<input type="text" 
+									id="loadVstreamRecorder_mqtt_recorderTopic" name="recorderTopic" />
+							</div>
+							<div class="mui-input-row">
+								<label>订阅的主题</label>
+								<input type="text"
+									id="loadVstreamRecorder_mqtt_reportTopic" name="reportTopic" />
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+			<div class="mui-button-row mui-button-div">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row mui-button-bottom">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+			    
+					//服务器请求的URL地址
+					var baseConfigIp = configIp;
+					
+					//服务器请求的端口号
+					var baseConfigPort = configPort;
+					
+					//基础配置全局变量，用于回显
+					var data_config;
+					
+					//消息总线全局变量，用于回显
+					var mqtt_enable;
+					
+					//摄像头数据全局变量，用于传值给子页面
+					var cameraList;
+					
+					//发送请求获取当前基本配置
+					$.ajax({
+						url: baseConfigIp + baseConfigPort + 'loadVStreamRecorder.cgi',
+						type: 'get',
+						dataType: 'json',
+						async:false,
+						success: function(data) {
+							let configData = data.config;
+							data_config = configData;
+							// console.log(JSON.stringify(configData))
+							for (let baseIndex in configData) {
+								if (baseIndex == "mqtt") {
+									// 消息总线
+									let mqttData = configData[baseIndex];
+									mqtt_enable = mqttData;
+									for (let mqttIndex in mqttData) {
+										document.getElementById("loadVstreamRecorder_mqtt_" + mqttIndex).value = mqttData[mqttIndex];
+									}
+								} else if (baseIndex == "cameras") {
+									cameraList = configData[baseIndex];
+									//摄像机列表
+								} else {
+									// 数据
+									$("#loadVstreamRecorder_config_"+ baseIndex).val(configData[baseIndex]);
+								}
+							}
+              
+						}
+					});
+					
+					//跳转摄像机列表
+					document.getElementById('loadVstreamRecorder_camera_cameras').addEventListener('tap', function() {
+						mui.openWindow({
+							url: 'NVRCameras.html',
+							id: 'NVRCameras.html',
+							extras:{
+								cameras:cameraList
+							}
+						});
+					})
+					
+					//保存视频回显
+					//var recordEnableDiv = document.getElementById('loadVstreamRecorder_config_recordEnable');
+					if (data_config.recordEnable == "true"  || data_config.recordEnable == true) {
+						mui("#loadVstreamRecorder_config_recordEnable").switch().toggle();
+						$('#load_v_str_hidden_config_recordEnable').val(true);
+					}else{
+						$('#load_v_str_hidden_config_recordEnable').val(false);
+					}
+          // 保存到内存卡回显
+          if (data_config.sdAutoDetect == "true"  || data_config.sdAutoDetect == true) {
+          	mui("#loadVstreamRecorder_config_sdAutoDetect").switch().toggle();
+          	$('#sdAutoDetect_in').val(true);
+          }else{
+          	$('#sdAutoDetect_in').val(false);
+          }
+					
+					//点击保存按钮储存信息
+					document.getElementById('loadVstreamRecorder_config_recordEnable').addEventListener('tap', function() {
+						let recordEnableBLVal = $('#load_v_str_hidden_config_recordEnable').val();
+						if(recordEnableBLVal == "true" || recordEnableBLVal == true){
+							$('#load_v_str_hidden_config_recordEnable').val(false);
+						}else{
+							$('#load_v_str_hidden_config_recordEnable').val(true);
+						}
+					});
+         
+          document.getElementById('loadVstreamRecorder_config_sdAutoDetect').addEventListener('tap', function() {
+          	let recordEnableBLVal = $('#sdAutoDetect_in').val();
+          	if(recordEnableBLVal == "true" || recordEnableBLVal == true){
+          		$('#sdAutoDetect_in').val(false);
+          	}else{
+          		$('#sdAutoDetect_in').val(true);
+          	}
+          });
+					
+					//用户鉴权回显
+					//var authDiv = document.getElementById('loadVstreamRecorder_config_auth');
+					if (data_config.auth == true) {
+						mui("#loadVstreamRecorder_config_auth").switch().toggle();
+						$('#loadVstreamRecorder_config_auth_in').val(true);
+						//authDiv.classList.add('mui-active');
+						document.getElementById('loadVstreamRecorder_config_auth_div').style.display = '';
+					} else if (data_config.auth == false) {
+						$('#loadVstreamRecorder_config_auth_in').val(false);
+						document.getElementById('loadVstreamRecorder_config_auth_div').style.display = 'none';
+					}
+					
+					//用户鉴权赋值
+					document.getElementById('loadVstreamRecorder_config_auth').addEventListener('tap', function() {
+						let recordEnableBLVal = $('#loadVstreamRecorder_config_auth_in').val();
+						if(recordEnableBLVal == "true" || recordEnableBLVal == true){
+							$('#loadVstreamRecorder_config_auth_in').val(false);
+						}else{
+							$('#loadVstreamRecorder_config_auth_in').val(true);
+						}
+					});
+					
+					//回显给mqtt_enable赋值
+					//var enableDiv = document.getElementById('loadVstreamRecorder_mqtt_enable');
+					if (mqtt_enable.enable == true) {
+						mui("#loadVstreamRecorder_mqtt_enable").switch().toggle();
+						$('#loadVstreamRecorder_mqtt_enable_in').val(true);
+						//enableDiv.classList.add('mui-active');
+						document.getElementById('loadVstreamRecorder_mqtt_div').style.display = '';
+					} else {
+						$('#loadVstreamRecorder_mqtt_enable_in').val(false);
+						document.getElementById('loadVstreamRecorder_mqtt_div').style.display = 'none';
+					}
+					
+					//点击切换消息总线是否有效
+					document.getElementById('loadVstreamRecorder_mqtt_enable').addEventListener('tap', function() {
+						let recordEnableBLVal = $('#loadVstreamRecorder_mqtt_enable_in').val();
+						if(recordEnableBLVal == "true" || recordEnableBLVal == true){
+							$('#loadVstreamRecorder_mqtt_enable_in').val(false);
+						}else{
+							$('#loadVstreamRecorder_mqtt_enable_in').val(true);
+						}
+					});
+					
+					//展示或隐藏消息总线
+					document.getElementById('loadVstreamRecorder_mqtt_enable').addEventListener("toggle", function(event) {
+						if (event.detail.isActive) {
+							document.getElementById('loadVstreamRecorder_mqtt_div').style.display = '';
+						} else {
+							document.getElementById('loadVstreamRecorder_mqtt_div').style.display = 'none';
+						}
+					});
+					
+					//展示或隐藏用户鉴权
+					document.getElementById('loadVstreamRecorder_config_auth').addEventListener("toggle", function(event) {
+						if (event.detail.isActive) {
+							document.getElementById('loadVstreamRecorder_config_auth_div').style.display = '';
+						} else {
+							document.getElementById('loadVstreamRecorder_config_auth_div').style.display = 'none';
+						}
+					});
+					
+					//获得添加页面传过来的摄像头信息
+					window.addEventListener('cameraList',function(e){
+						let cameraL = e.detail.datas;
+						cameraList = JSON.parse(cameraL);
+					});
+					
+					//点击保存储存信息
+					document.getElementById('saveBtn').addEventListener('tap', function() {
+						var btnArray = ['否', '是'];
+						mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+							if (e.index == 1) {
+								//获取基本配置表单数据
+								var loadVstreamRecorder_config = $('#loadVstreamRecorder_config_form').serializeObject();
+                // 消息总线
+								var loadVstreamRecorder_mqtt = $('#loadVstreamRecorder_mqtt_form').serializeObject();
+                console.log(JSON.stringify(loadVstreamRecorder_config.sdAutoDetect))
+								
+								loadVstreamRecorder_mqtt.enable = (loadVstreamRecorder_mqtt.enable == "true" || loadVstreamRecorder_mqtt.enable == true);
+								
+								//转换auth值为布尔型
+								loadVstreamRecorder_config.auth = (loadVstreamRecorder_config.auth == "true" || loadVstreamRecorder_config.auth == true);
+								
+								//转换recordEnable值为布尔型
+								loadVstreamRecorder_config.recordEnable = (loadVstreamRecorder_config.recordEnable == "true" || loadVstreamRecorder_config.recordEnable == true);
+								
+								//转换sdAutoDetect值为布尔型
+								loadVstreamRecorder_config.sdAutoDetect = (loadVstreamRecorder_config.sdAutoDetect == "true" || loadVstreamRecorder_config.sdAutoDetect == true);
+								console.log(JSON.stringify(loadVstreamRecorder_config.sdAutoDetect))
+                loadVstreamRecorder_config.duration = Number(loadVstreamRecorder_config.duration);
+								loadVstreamRecorder_config.port = Number(loadVstreamRecorder_config.port);
+								loadVstreamRecorder_config.storageSize = Number(loadVstreamRecorder_config.storageSize);
+								loadVstreamRecorder_config.recordDays = Number(loadVstreamRecorder_config.recordDays);
+								for (var i = 0; i < cameraList.length; i++) {
+									//转换enable值为布尔型
+									cameraList[i].enable = (cameraList[i].enable == "true" || cameraList[i].enable == true);
+									//转换recordEnable值为布尔型
+									cameraList[i].recordEnable = (cameraList[i].recordEnable == "true" || cameraList[i].recordEnable == true);
+									//转换type为number型
+									cameraList[i].type = Number(cameraList[i].type);
+									//区别2/3类摄像机
+									if (cameraList[i].type == 2 || cameraList[i].type == 3) {
+										let fieldNumberArr = [
+												"bitRate","frameRate","iGap","mainHeight","mainWidth","subBitRate",
+												"subHeight","subIGap","subWidth",'titleFont',
+										];
+										let tempObj = cameraList[i];
+										for (let index in tempObj) {
+												if(fieldNumberArr.indexOf(index) > -1 && tempObj[index]){
+														tempObj[index] = Number(tempObj[index]);
+												}
+										};
+										
+										//当摄像机为空时，转换为xxx值，避免被清除当前字段，当储存时转换为‘’
+										if (cameraList[i].title == 'xxx') {
+											cameraList[i].title = '';
+										}
+										
+										//转换showTitle值为布尔型
+										cameraList[i].showTitle = (cameraList[i].showTitle == "true" || cameraList[i].showTitle == true);
+										//转换subStream值为布尔型
+										cameraList[i].subStream = (cameraList[i].subStream == "true" || cameraList[i].subStream == true);
+									}; 
+								};
+								
+								//组装成服务器接收的formd格式
+								loadVstreamRecorder_config['cameras'] = cameraList;
+								loadVstreamRecorder_config['mqtt'] = loadVstreamRecorder_mqtt;
+								// console.log(JSON.stringify(cameraList))
+								var config = {
+									config: JSON.stringify(loadVstreamRecorder_config)
+								}
+								var formdata = new FormData();
+								for (let index in config){
+									formdata.append(index,config[index])
+								};
+								
+                if (loadVstreamRecorder_config.port > 65535) {
+								  mui.alert('保存失败,RTSP端口应小于65536')
+								} else {
+                  //向服务器发送请求，并储存更新后的配置
+                  $.ajax({
+                  	url: baseConfigIp + baseConfigPort + 'saveVStreamRecorder.cgi',
+                  	data: formdata,
+                  	type: 'post',
+                  	processData: false,
+                  	contentType: false,
+                  	success: function(data) {
+                  		if(data.resultCode == 0){
+                  			mui.alert('保存成功')
+                  		}else{
+                  			mui.alert('保存失败，请重试')
+                  		}
+                  	}
+                  });
+                }
+								
+							}
+						})
+					});
+					
+					//遍历form表单，获取表单中的数据
+					$.fn.serializeObject = function() {
+						var o = {};
+						var a = this.serializeArray();
+						$.each(a, function() {
+							if (o[this.name]) {
+								if (!o[this.name].push) {
+									o[this.name] = [o[this.name]];
+								}
+								o[this.name].push(this.value || '');
+							} else {
+								o[this.name] = this.value || '';
+							}
+						});
+						return o;
+					};
+			})
+		</script>
+	</body>
+</html>

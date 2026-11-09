@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0px 0px 0.5%;
+			} */
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-btn-save {
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">WEBRTC推流配置</a>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="loadWebRtcClient_base_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">基本配置</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>服务器地址</label>
+							<input type="text" class="mui-input-clear"
+								id="loadWebRtcClient_base_signalingServer" name="signalingServer" />
+						</div>
+						<div class="mui-input-row">
+							<label style="width: 20%; height: 30px;">许可证书</label>
+							<input type="text" style="width: 80%;"
+								id="loadWebRtcClient_base_license" name="license" />
+						</div>
+						<div class="mui-input-row">
+							<label>访问数量</label>
+							<input type="text" class="mui-input-clear"
+								id="loadWebRtcClient_base_channels" name="channels" />
+						</div>
+					</li>
+				</ul>
+			</form>
+			<form class="mui-input-group" id="loadWebRtcClient_stream_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">WEBRTC推流列表</li>
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" id="loadWebRtcClient_stream_streams">查看列表</a>
+					</li>
+				</ul>
+			</form>
+			<div class="mui-button-row mui-button-div">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row mui-button-bottom">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+		
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			
+			mui.plusReady(function () {
+				
+				//请求的URL地址
+				var baseConfigIp = configIp;
+				
+				//请求的端口号
+				var baseConfigPort = configPort;
+				
+				//全局变量装推流信息
+				var streamList;
+				
+				// 全局配置中的devicedId全局变量
+				var getGloble;
+				
+				
+				//向服务器发送请求获取当前基础配置
+				mui.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadWebRtcClient.cgi',
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						let configData = data.config;
+					  console.log(JSON.stringify(configData))
+						for (let baseIndex in configData) {
+							if ($('#loadWebRtcClient_base_' + baseIndex).length > 0) {
+									document.getElementById("loadWebRtcClient_base_" + baseIndex).value = configData[
+										baseIndex];
+							}
+							if (baseIndex == 'streams') {
+								streamList = configData[baseIndex]
+								console.log(JSON.stringify(streamList))
+							}
+						}
+					}
+				});
+				
+				//向服务器发送请求存储更新后的数据
+				$.ajax({
+					url: baseConfigIp + baseConfigPort + 'loadGlobal.cgi',
+					type: 'get',
+					dataType: 'json',
+					success: function(data) {
+						getGloble = data.config
+					}
+				});
+				
+				//跳转webrtc推流列表
+				document.getElementById('loadWebRtcClient_stream_streams').addEventListener('tap', function() {
+					mui.openWindow({
+						url: 'streams.html',
+						id: 'streams.html',
+						extras:{
+							streams:streamList
+						}
+					});
+				});
+				
+				//获得添加页面传过来的摄像头信息
+				window.addEventListener('stearmList',function(e){
+					let stearmL = e.detail.datas;
+					streamList = JSON.parse(stearmL);
+          console.log(streamList)
+				});
+				
+				
+				//点击保存按钮，向服务器储存信息
+				document.getElementById('saveBtn').addEventListener('tap', function() {
+					// 保存后返回值
+					let handleG;
+					let handleW;
+					
+					var btnArray = ['否', '是'];
+					mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+						if (e.index == 1) {
+							//获取表单数据
+							var loadWebRtcClient_streams = $('#loadWebRtcClient_base_form').serializeObject();
+							getGloble.deviceId = loadWebRtcClient_streams.license
+							//将获取的数据组装成服务器接受的formdata格式
+							var configG = {
+								config: JSON.stringify(getGloble)
+							}
+							var formdataG = new FormData();
+							for (let index in configG){
+								formdataG.append(index,configG[index])
+							}
+							//将修改后的数据发送请求给服务器进行保存
+							$.ajax({
+								url: baseConfigIp + baseConfigPort + 'saveGlobal.cgi',
+								data: formdataG,
+								type: 'post',
+								processData: false,
+								contentType: false,
+								async: false,
+								success: function(data) {
+									handleG = data.resultCode
+								}
+							})
+							
+							loadWebRtcClient_streams.channels = Number(loadWebRtcClient_streams.channels)
+							loadWebRtcClient_streams['streams'] = streamList;
+											
+							var config = {
+								config: JSON.stringify(loadWebRtcClient_streams)
+							}
+							console.log(config.config)
+							var formdata = new FormData();
+							for (let index in config) {
+								formdata.append(index, config[index])
+							}
+							
+							//向服务器发送请求存储更新后的数据
+							$.ajax({
+								url: baseConfigIp + baseConfigPort + 'saveWebRtcClient.cgi',
+								data: formdata,
+								type: 'post',
+								processData: false,
+								contentType: false,
+								async: false,
+								success: function(data) {
+									handleW = data.resultCode
+								}
+							});
+						}
+						if (handleG == 0 && handleW == 0) {
+							mui.alert('保存成功')
+						} else{
+							mui.alert('保存失败')
+						}
+					});
+				});
+				
+				//遍历form表单，获取表单中的数据
+				$.fn.serializeObject = function() {
+					var o = {};
+					var a = this.serializeArray();
+					$.each(a, function() {
+						if (o[this.name]) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.mui-btn-save { 
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			.mui-table-view {
+				border: solid 0.5px lightgrey;
+			}
+
+			.mui-table-view-cell-title {
+				background-color: #F2F4F5;
+				color: #666666;
+			}
+
+			.mui-table-view-cell {
+				border-radius: 1px;
+			}
+			.mui-input-blackColor {
+				background-color: #F2F4F5;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<a class="mui-title">语音配置</a>
+		</header>
+		<div class="mui-content">
+
+			<form class="mui-input-group" id="apiOptions_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">API配置</li>
+					<li class="mui-table-view-cell">
+						<!-- <div class="mui-input-row">
+							<label>是否合成语音</label>
+							<input type="text" name="synthesis" id="apiOptions_synthesis">
+						</div> -->
+						<div class="mui-input-row">
+							<label>是否合成语音</label>
+							<div class="mui-switch" id="apiOptions_synthesis_in" name="synthesis">
+								<input type="hidden"  name="synthesis" id="apiOptions_synthesis">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</div>
+						<div class="mui-input-row">
+							<label>百度语音合称app_id</label>
+							<input type="text" name="app_id" id="apiOptions_app_id" />
+						</div>
+						<div class="mui-input-row">
+							<label>百度语音公钥</label>
+							<input type="text" name="api_key" id="apiOptions_api_key" />
+						</div>
+						<div class="mui-input-row">
+							<label>百度语音密钥</label>
+							<input type="text" name="secret_key" id="apiOptions_secret_key" />
+						</div>
+					</li>
+				</ul>
+			</form>
+			
+			<form class="mui-input-group" id="voiceOptions_form">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-table-view-cell mui-table-view-cell-title">语音配置</li>
+					<li class="mui-table-view-cell">
+						<div class="mui-input-row">
+							<label>语速</label>
+							<input type="number" name="speed" id="voiceOptions_speed" />
+						</div>
+						<div class="mui-input-row">
+							<label>语调</label>
+							<input type="number" name="pitch" id="voiceOptions_pitch" />
+						</div>
+						<div class="mui-input-row">
+							<label>音量</label>
+							<input type="number" name="volume" id="voiceOptions_volume" />
+						</div>
+						<div class="mui-input-row">
+							<label>声音类型</label>
+							<select style="width: 50%;"  type="number" name="voiceType" id="voiceOptions_voiceType">
+							<option value="0">男生一</option>
+							<option value="1">女生一</option>
+							<option value="3">男生二</option>
+							<option value="4">女生二</option>
+							</select>
+							<!-- <input type="number" name="voiceType" id="voiceOptions_voiceType" /> -->
+						</div>
+					</li>
+				</ul>
+			</form>
+
+			<div class="mui-button-row" style="height: 40px;margin-top: 10px;">
+				<span style="color: #007AFF;">应用参数保存后，需重启设备方能生效</span>
+			</div>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">保存</button>
+			</div>
+		</div>
+
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+
+			//请求的URL地址
+			var baseConfigIp = configIp;
+			
+			//请求的端口号
+			var baseConfigPort = configPort;
+			
+
+			//发送请求获取全局配置的基本信息
+			$.ajax({
+				url: baseConfigIp + baseConfigPort + 'loadVoiceService.cgi',
+				type: 'get',
+				dataType: 'json',
+				success: function(data) {
+					let configData = data.config;
+					console.log(JSON.stringify(configData))
+					for (let baseIndex in configData) {
+						if (baseIndex == "apiOptions") {
+							// 消息总线回显
+							let apiOptionsData = configData[baseIndex];
+							for (let apiOptionsIndex in apiOptionsData) {
+								 document.getElementById("apiOptions_" + apiOptionsIndex).value = apiOptionsData[apiOptionsIndex];
+							}
+						} else if (baseIndex == "voiceOptions") {
+							// 消息总线回显
+							let voiceOptionsData = configData[baseIndex];
+							for (let voiceOptionsIndex in voiceOptionsData) {
+								 document.getElementById("voiceOptions_" + voiceOptionsIndex).value = voiceOptionsData[voiceOptionsIndex];
+							}
+						}
+					}
+					if (data.config.apiOptions.synthesis== "true" || data.config.apiOptions.synthesis == true) {
+						mui("#apiOptions_synthesis_in").switch().toggle();
+						$('#apiOptions_synthesis').val(true);								 
+					} else {
+						$('#apiOptions_synthesis').val(false);
+					}
+				}
+			});
+			
+		
+		
+			//点击保存4g状态信息
+			document.getElementById('apiOptions_synthesis_in').addEventListener('tap', function() {
+				let stateVal = $('#apiOptions_synthesis').val();
+				if (stateVal == "true" || stateVal == true) {
+					$('#apiOptions_synthesis').val(false);
+				} else {
+					$('#apiOptions_synthesis').val(true);
+				}
+			});
+			
+			//点击保存储存信息
+			document.getElementById('saveBtn').addEventListener('tap', function() {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否确认保存，确认？', '提示', btnArray, function(e) {
+					if (e.index == 1) {
+						//获取消息总线表单数据
+						var loadapiOptions = $('#apiOptions_form').serializeObject();
+						var loadvoiceOptions = $('#voiceOptions_form').serializeObject();
+						var data = {
+							apiOptions: loadapiOptions,
+							voiceOptions: loadvoiceOptions
+						}	
+						loadvoiceOptions.speed = Number(loadvoiceOptions.speed)
+						loadvoiceOptions.pitch = Number(loadvoiceOptions.pitch)
+						loadvoiceOptions.volume = Number(loadvoiceOptions.volume)
+						loadvoiceOptions.voiceType = Number(loadvoiceOptions.voiceType)
+						if(loadapiOptions.synthesis== 'true'){
+							loadapiOptions.synthesis = true
+						}else{
+							loadapiOptions.synthesis = false
+						}
+						//将获取的数据组装成服务器接受的formdata格式
+						var config = {
+							config: JSON.stringify(data)
+						}
+						var formdata = new FormData();
+						for (let index in config){
+							formdata.append(index,config[index])
+						}				
+						//将修改后的数据发送请求给服务器进行保存
+						$.ajax({
+							url: baseConfigIp + baseConfigPort + 'saveVoiceService.cgi',
+							data: formdata,
+							type: 'post',
+							processData: false,
+							contentType: false,
+							success: function(data) {
+								if(data.resultCode == 0){
+									mui.alert('保存成功')
+								}else{
+									mui.alert('保存失败，请重试')
+								}
+							}
+						});
+						
+					}
+				})
+			});
+			
+			//遍历form表单，获取表单中的信息
+			$.fn.serializeObject = function() {
+				var o = {};
+				var a = this.serializeArray();
+				$.each(a, function() {
+					if (o[this.name]) {
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]];
+						}
+						o[this.name].push(this.value || '');
+					} else {
+						o[this.name] = this.value || '';
+					}
+				});
+				return o;
+			};
+		</script>
+		<script type="text/javascript">
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+
+		<style type="text/css">
+			/* .mui-input-group {
+				width: 99%;
+				margin: 10px 0.5% 0px 0.5%;
+			} */
+
+			.mui-button-div {
+				height: 50px;
+				margin-top: 5px;
+			}
+
+			.mui-button-bottom {
+				height: 40px;
+				bottom: 10px;
+			}
+
+			.mui-btn-save {
+				margin-top: 15px;
+				width: 40%;
+				height: 40px;
+			}
+
+			.mui-title {
+				font-weight: bold;
+				font-size: 20px;
+			}
+			
+			.mui-switch{
+				width: 85px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+			<h1 class="mui-title">编辑CANLDLIST</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group" id="streams_stream_editForm">
+				<ul class="mui-table-view mui-input-group" id="streams_stream_message">
+					
+				</ul>
+			</form>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-btn-save" id="saveBtn" style="width: 80%;border-radius: 20px;">确认修改</button>
+			</div>
+		</div>
+
+		<script src="js/baseConfig.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+			mui.plusReady(function () {
+				//服务器请求的URL地址
+				var baseConfigIp = configIp;
+				
+				//服务器请求的端口号
+				var baseConfigPort = configPort;
+					
+					//接收摄像头列表传来的数据
+			    var self = plus.webview.currentWebview();
+			    var subStream = self.editStream;
+					var stream = JSON.parse(subStream);
+					
+					//删除ul内的所有节点,避免数据重复
+					$("#streams_stream_message").html("");
+					var cameras = stream;
+					let $liNode = "";
+					$liNode += 
+					'<li class="mui-table-view-cell">' +
+						'<div class="mui-input-row">' +
+							'<label>编号</label>' +
+							'<input type="text" class="mui-input-clear" name="id" id="streams_stream_id" readonly="readonly"/>' +
+						'</div>' +
+						'<div class="mui-input-row mui-right">' +
+							'<label>是否启用</label>' +
+							'<div class="mui-switch" id="streams_stream_enable" name="enable">'+
+								'<div class="mui-switch-handle"></div>'+
+							'</div>' +
+						'</div>' +
+						'<div class="mui-input-row">' +
+							'<label>推流描述</label>' +
+							'<input type="text" class="mui-input-clear" name="label" id="streams_stream_label"/>' +
+						'</div>' +
+						'<div class="mui-input-row">'+
+							'<label>摄像机编号</label>'+
+							'<select id="stearm_cameras_id" onchange="changeI()">'+
+							'</select>'+
+						'</div>'+
+						'<div class="mui-input-row">'+
+							'<label>码流类型</label>'+
+							'<select id="stearm_cameras_url" onchange="changeI()">'+
+								'<option value="01">主码流</option>'+
+								'<option value="02">子码流</option>'+
+							'</select>'+
+						'</div>'+
+						'<div class="mui-input-row">'+
+							'<label>url地址</label>'+
+						'</div>'+
+						'<div class="mui-input-row">'+
+							'<input type="text" name="url" id="stearms_url" value="" readonly="readonly" style="background-color: lightgray;" />'+
+						'</div>' +
+					'</li>';
+					//添加至ul中
+					$("#streams_stream_message").html($liNode);
+					mui('.mui-switch')['switch']();
+	
+					//摄像机类型回显
+					for (let cameraIndex in cameras) {
+						$("#streams_stream_" + cameraIndex).val(cameras[cameraIndex]);
+					}
+					var enableDiv = document.getElementById("streams_stream_enable");
+					if (cameras.enable == true) {
+						enableDiv.classList.add('mui-active');
+					};
+					//发送请求获取当前基本配置
+					mui.ajax({
+						url: baseConfigIp + baseConfigPort + 'loadVStreamRecorder.cgi',
+						type: 'get',
+						dataType: 'json',
+						async: false, 
+						success: function(data) {
+							let configData = data.config;
+							let cameras = configData.cameras;
+							$("#stearm_cameras_id").html("");
+							let $liNode = "";
+							for (let i = 0; i < cameras.length; i++) {
+									$liNode +=
+									'<option value="' + cameras[i].id + '">' + cameras[i].id + '</option>'
+							}
+							//添加至ul中
+							$("#stearm_cameras_id").html($liNode);
+							mui('.mui-switch')['switch']();
+							// let Sid = $('#stearm_cameras_id').val();
+							// let Surl = $('#stearm_cameras_url').val();
+							// $('#stearms_url').val('rtsp://127.0.0.1:8554/Streaming/Channels/'+ Sid + Surl)
+						}
+					});
+					
+					let ad = JSON.stringify(stream.url).split('/')
+					let ab = ad[ad.length-1]
+					let ac = ab.substr(ab.length-3)
+					ac = ac.substring(0, ac.length - 1)
+					let ae = ab.substr(0,ab.length-3)
+					document.getElementById('stearm_cameras_url').value = ac + ''
+					document.getElementById('stearm_cameras_id').value = ae
+					$('#stearms_url').val('rtsp://127.0.0.1:8554/Streaming/Channels/'+ document.getElementById('stearm_cameras_id').value + document.getElementById('stearm_cameras_url').value)
+					
+					//获取表单数据
+					document.getElementById('saveBtn').addEventListener('tap',function(){
+						//获取表单数据
+						let addStream = $('#streams_stream_editForm').serializeObject();
+						let enableIsActivity = document.getElementById("streams_stream_enable").classList.contains("mui-active");
+						addStream.enable = enableIsActivity;
+						if (addStream.id == '') {
+							mui.alert('编号不能为空','提示','确认')
+						}
+						addStream.id = Number(addStream.id);
+						
+						var editFormCamera = JSON.stringify(addStream);
+							//将编辑后的摄像机信息传递给摄像头列表
+							//进行预加载
+							var prPage = mui.preload({url:'streams.html',id:'streams.html'});
+							mui.fire(prPage,'editStream',{editData:editFormCamera});
+							mui.openWindow({
+								url:'streams.html',
+								id:'streams.html'
+							});
+					});
+					
+					/**
+					 * 遍历form表单，获取表单中的数据
+					 */
+					$.fn.serializeObject = function() {
+						var o = {};
+						var a = this.serializeArray();
+						$.each(a, function() {
+							if (o[this.name]) {
+								if (!o[this.name].push) {
+									o[this.name] = [o[this.name]];
+								}
+								o[this.name].push(this.value || '');
+							} else {
+								o[this.name] = this.value || '';
+							}
+						});
+						return o;
+					};
+			});
+			/**
+			 * 组装推流url地址
+			 */
+			function changeI(){
+				$('#stearms_url').val('rtsp://127.0.0.1:8554/Streaming/Channels/'+ document.getElementById('stearm_cameras_id').value + document.getElementById('stearm_cameras_url').value)
+			}
+		</script>
+	</body>
+</html>
