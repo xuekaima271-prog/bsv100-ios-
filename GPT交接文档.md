@@ -21,9 +21,9 @@
 - `Info.plist`（工程根目录）：`NSAppTransportSecurity → NSAllowsArbitraryLoads = true`，放行明文 HTTP。
 - 图标 `icon.png`（1024×1024，BSV100 字样）已生成，manifest 里 `icons.72` 引用它。
 
-**不在仓库里的东西**（GitHub 接口推不了二进制）：
+**不在仓库里的东西**（GitHub 接口推不了二进制，**这是已知的、不是遗漏**）：
 
-- 素材包 `bsv100-ios-assets.zip`（已在聊天里发给用户）：内含 `icon.png`、`img/`（18 张图）、`fonts/mui.ttf`。拿到工程后解压到工程根目录即完整。
+- 素材包 `bsv100-ios-assets.zip`（已在聊天里发给用户）：内含 `icon.png`、`img/`（18 张图）、`fonts/mui.ttf`。拿到工程后解压到工程根目录即完整。**打包不受影响**——HBuilderX 只看本地工程文件夹，不看仓库；想让仓库也完整，可在 github.com 网页上把这三个直接拖进仓库（网页上传支持二进制）。
 
 ## 三、关键技术事实
 
